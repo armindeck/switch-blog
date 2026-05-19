@@ -4,7 +4,7 @@
     "version": "1.2.0",
     "state": "dev",
     "created": "2026-02-25",
-    "updated": "2026-04-03",
+    "updated": "2026-05-19",
     "languages": ["es", "en"],
-    "themes": ["light", "dark", "pink"]
+    "themes": ["light", "dark", "dark-aero", "pink", "fuchsia", "cyberpunk", "matrix"]
 }
