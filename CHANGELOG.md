@@ -1,5 +1,9 @@
 # Historial de cambios
 
+## [2026-05-19] - v1.2.0
+
+- Nuevos temas: Light, Dark, Dark Aero, Pink, Fuchsia, Cyberpunk, Matrix
+
 ## [2026-02-26 - 2026-03-28] - v1.0.0 & v1.1.0
 
 - Primera versión de la pagina
