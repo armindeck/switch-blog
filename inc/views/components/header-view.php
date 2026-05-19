@@ -37,7 +37,11 @@ SOFTWARE.
     </style>
 	<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 </head>
-<body data-theme="<?= $_SESSION["theme"] ?? (!empty(config("theme")) ? config("theme") : "light") ?>">
+<?php 
+    $currentTheme = $_SESSION["theme"] ?? (!empty(config("theme")) ? config("theme") : "light");
+    $themeClass = ($currentTheme !== "light") ? "theme-" . $currentTheme : "";
+?>
+<body class="<?= $themeClass ?>" data-theme="<?= $currentTheme ?>">
     <div class="lines">
         <div class="line"></div>
         <div class="line"></div>
@@ -69,7 +73,7 @@ SOFTWARE.
                         </optgroup>
                         <optgroup label="<?= language("themes") ?>">
                         <?php foreach (core("themes") as $key): ?>
-                            <option value="theme.<?= $key ?>"><?= strtoupper(substr($key, 0, 1)) . substr($key, 1, strlen($key)) ?></option>
+                            <option value="theme.<?= $key ?>" <?= ($currentTheme === $key ? "selected" : "") ?>><?= strtoupper(substr($key, 0, 1)) . substr($key, 1, strlen($key)) ?></option>
                         <?php endforeach; ?>
                         </optgroup>
                     </select>
