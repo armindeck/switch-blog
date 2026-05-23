@@ -1,5 +1,9 @@
 # Historial de cambios
 
+## [2026-05-22] - v1.3.0
+
+- Nueva mejora visual en el listado de animes, peliculas, series...
+
 ## [2026-05-19] - v1.2.0
 
 - Nuevos temas: Light, Dark, Dark Aero, Pink, Fuchsia, Cyberpunk, Matrix
