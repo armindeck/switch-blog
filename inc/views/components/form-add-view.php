@@ -57,11 +57,11 @@ SOFTWARE.
         <select name="stars" id="stars">
             <?php foreach ([
                 "" => "stars",
-                "1" => "1",
-                "2" => "2",
-                "3" => "3",
-                "4" => "4",
-                "5" => "5"
+                "1" => "🥱",
+                "2" => "😐",
+                "3" => "😁",
+                "4" => "😎",
+                "5" => "😍"
                 ] as $key => $value): ?>
                 <option value="<?= $key ?>" <?= $key == "" ? 'class="option_title"' : '' ?> <?= getListValueGetTmp($list_only, "id", "stars") == $key ? "selected" : "" ?>><?= language($value) ?></option>
             <?php endforeach; ?>
