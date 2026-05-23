@@ -326,3 +326,23 @@ function strDate(string $date): string {
 
     return $string;
 }
+
+function starsEmoji(string $stars): string {
+    return match ($stars) {
+        "1" => "🥱",
+        "2" => "😐",
+        "3" => "😁",
+        "4" => "😎",
+        "5" => "😍",
+        default => ""
+    };
+}
+
+function stateEmoji(string $state): string {
+    return match ($state) {
+        "watch" => "👀",
+        "waiting" => "⏳",
+        "finalized" => "✅",
+        default => ""
+    };
+}
