@@ -38,6 +38,7 @@ function pathFiles(string $string): string {
         "config" => "database/config.json",
         "list" => "database/list.json",
         "birthday" => "database/birthday.json",
+        "notes" => "database/notes.json",
         "goals" => "database/goals.json",
         "language" => "database/language.json",
         "counter" => "database/counter.json",
