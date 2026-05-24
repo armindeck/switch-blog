@@ -94,6 +94,21 @@ switch ($view) {
         $data["list_order_by_state"] = array_merge(array_reverse($list_state["in_progress"]), array_reverse($list_state["on_pause"]), array_reverse($list_state["completed"]));
         break;
 
+    case "notes":
+        if(!$model->auth()){ redirect(route("login")); }
+        
+        $list = read(pathFiles("notes"));
+        $actions->addNotes($list);
+        $actions->deleteNotes($list);
+        $data = [
+            "model" => $model,
+            "list" => $list,
+            "list_only" => array_reverse($list[$_SESSION["user"]] ?? []),
+            "user" => $_SESSION["user"],
+            "view" => $view
+        ];
+        break;
+
     case "login":
         if($model->auth()){ redirect(route()); }
         $data = ["model" => $model];
