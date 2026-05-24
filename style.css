@@ -722,6 +722,179 @@ input.mini {
     max-width: 100px;
 }
 
+/* TEXTAREA STYLES */
+textarea {
+    padding: 8px;
+    background-color: var(--input-bg);
+    color: var(--input-co);
+    border: 1px solid var(--input-border-co);
+    border-radius: 4px;
+    font-family: var(--font-primary);
+    transition: all 0.2s ease;
+    font-size: 14px;
+    line-height: 1.4;
+    resize: vertical;
+}
+
+textarea::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.theme-dark textarea::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
+
+.theme-dark-aero textarea::placeholder {
+    color: rgba(232, 232, 232, 0.5);
+}
+
+.theme-pink textarea::placeholder {
+    color: rgba(74, 14, 78, 0.4);
+}
+
+.theme-fuchsia textarea::placeholder {
+    color: rgba(250, 250, 248, 0.7);
+}
+
+.theme-cyberpunk textarea::placeholder {
+    color: rgba(0, 255, 136, 0.6);
+}
+
+.theme-matrix textarea::placeholder {
+    color: rgba(0, 170, 0, 0.7);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--input-focus-border-co);
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+}
+
+.theme-dark textarea:focus {
+    box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.1);
+}
+
+.theme-dark-aero textarea:focus {
+    box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.1);
+}
+
+.theme-cyberpunk textarea:focus {
+    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.3), 0 0 8px rgba(0, 255, 255, 0.2);
+}
+
+.theme-matrix textarea:focus {
+    box-shadow: 0 0 0 2px rgba(0, 255, 0, 0.3), 0 0 12px rgba(0, 255, 0, 0.4);
+}
+
+/* TEXTAREA VARIANTS */
+
+/* Tamaño Mini */
+textarea.mini {
+    min-width: 100px;
+    min-height: 60px;
+}
+
+/* Tamaño Normal */
+textarea.normal {
+    min-width: 100%;
+    min-height: 100px;
+}
+
+/* Tamaño Large */
+textarea.large {
+    min-width: 100%;
+    min-height: 200px;
+}
+
+/* Textarea Resizable (por defecto) */
+textarea.resizable {
+    resize: both;
+}
+
+/* Textarea No Resizable */
+textarea.fixed {
+    resize: none;
+}
+
+/* Textarea Deshabilitado */
+textarea:disabled,
+textarea[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-dark textarea:disabled,
+.theme-dark textarea[disabled] {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Textarea Read-Only */
+textarea:read-only,
+textarea[readonly] {
+    border-color: rgba(0, 0, 0, 0.15);
+    cursor: default;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.theme-dark textarea:read-only,
+.theme-dark textarea[readonly] {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Textarea Error State */
+textarea.error {
+    border-color: #f44336;
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+textarea.error:focus {
+    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.1);
+}
+
+.theme-dark textarea.error {
+    background-color: rgba(211, 47, 47, 0.1);
+}
+
+/* Textarea Success State */
+textarea.success {
+    border-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+textarea.success:focus {
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.theme-dark textarea.success {
+    background-color: rgba(67, 160, 71, 0.1);
+}
+
+/* Textarea Warning State */
+textarea.warning {
+    border-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.05);
+}
+
+textarea.warning:focus {
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.1);
+}
+
+.theme-dark textarea.warning {
+    background-color: rgba(251, 192, 45, 0.1);
+}
+
+/* Textarea Auto-resize */
+textarea.auto-resize {
+    overflow: hidden;
+    resize: none;
+}
+
+/* Textarea with Counter (para mostrar caracteres) */
+textarea.with-counter {
+    margin-bottom: 4px;
+}
+
 option {
     color: var(--option-co);
     background-color: var(--option-bg);
@@ -744,6 +917,10 @@ thead {
 
 td {
     padding: 4px;
+}
+
+.content, tbody ul, tbody ol {
+    padding-left: 20px;
 }
 
 .content {
