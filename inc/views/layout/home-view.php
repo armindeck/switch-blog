@@ -27,13 +27,7 @@ view("components/header", ["auth" => $model->auth()]);
 ?>
     <main class="main">
         <?php view("components/message"); ?>
-        <div class="content">
-            <div class="button-switch-content">
-                <a href="<?= route() ?>" class="active">AniPelis</a>
-                <a href="<?= route("birthday") ?>"><?= language("birthday") ?></a>
-                <a href="<?= route("goals") ?>"><?= language("goals") ?></a>
-            </div>
-        </div>
+        <?php view("components/sections", ["section" => "home"]); ?>
         <?php view("components/form-add", ["list_only" => $list_only, "user" => $user ?? false]); ?>
         <hr>
         <?php view("components/list", ["list_order_by_state" => $list_order_by_state, "user" => $user ?? false]); ?>

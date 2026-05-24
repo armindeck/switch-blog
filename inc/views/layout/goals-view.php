@@ -27,13 +27,7 @@ view("components/header", ["auth" => $model->auth()]);
 ?>
     <main class="main">
         <?php view("components/message"); ?>
-        <div class="content">
-            <div class="button-switch-content">
-                <a href="<?= route() ?>">AniPelis</a>
-                <a href="<?= route("birthday") ?>"><?= language("birthday") ?></a>
-                <a href="<?= route("goals") ?>" class="active"><?= language("goals") ?></a>
-            </div>
-        </div>
+        <?php view("components/sections", ["section" => "goals"]); ?>
         <form class="form" method="post">
             <h2><?= language("goals") ?> (<?= language("private") ?>)</h2>
             <input type="text" name="goal" id="goal" value="<?= getListValueGetTmp($list_only, "id", "goal") ?>" placeholder="<?= language("goal") ?>" title="<?= language("goal") ?>" required>
