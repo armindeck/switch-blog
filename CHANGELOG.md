@@ -1,5 +1,9 @@
 # Historial de cambios
 
+## [2026-05-23] - v1.4.0
+
+- Nueva sección de notas (Funciona con Markdown)
+
 ## [2026-05-22] - v1.3.0
 
 - Nueva mejora visual en el listado de animes, peliculas, series...
