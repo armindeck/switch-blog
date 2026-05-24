@@ -1,4 +1,6 @@
 {
+    "notes": {"es": "Notas", "en": "Notes"},
+    "content": {"es": "Contenido", "en": "Content"},
     "in_progress": {"es": "En proceso", "en": "In progress"},
     "on_pause": {"es": "En pausa", "en": "On pause"},
     "completed": {"es": "Completada", "en": "Completed"},
