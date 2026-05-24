@@ -28,6 +28,8 @@ require_once __DIR__ . "/inc/script.php"; // Scripts
 require_once __DIR__ . "/inc/model.php"; // Model
 require_once __DIR__ . "/inc/captcha.php"; // Captcha
 require_once __DIR__ . "/inc/actions.php"; // Actions
+require_once __DIR__ . "/inc/lib/Markdown.php"; // Markdown
+require_once __DIR__ . "/inc/lib/MarkdownExtra.php"; // Markdown Extra
 
 $slug = secureString($_GET["slug"] ?? "home");
 $view = $slug;
