@@ -39,6 +39,7 @@ function pathFiles(string $string): string {
         "list" => "database/list.json",
         "birthday" => "database/birthday.json",
         "notes" => "database/notes.json",
+        "diary" => "database/diary.json",
         "goals" => "database/goals.json",
         "language" => "database/language.json",
         "counter" => "database/counter.json",
@@ -119,12 +120,16 @@ function getValueTmp(string $string): string {
     return !empty($_SESSION["tmp_form"][$string]) ? $_SESSION["tmp_form"][$string] : "";
 }
 
+function getValueTmpConfirm(string $string): bool {
+    return !empty(getValueTmp($string));
+}
+
 function getListValueGet(array $list, string $id, string $string): string {
     return getListValue($list, $_GET[$id] ?? "", $string);
 }
 
 function getListValueGetTmp(array $list, string $id, string $string): string {
-    return getListValueGet($list, $id, $string) ?? getValueTmp($string);
+    return !empty(getListValueGet($list, $id, $string)) ? getListValueGet($list, $id, $string) : getValueTmp($string);
 }
 
 function language(string $string): string {
