@@ -1,4 +1,11 @@
 {
+    "replace_note": {"es": "Reemplazar nota existente", "en": "Replace existing note"},
+    "yes": {"es": "Sí", "en": "Yes"},
+    "no": {"es": "No", "en": "No"},
+    "diary_today_note": {"es": "Hay una nota para hoy, puedes buscarla y editarla o agregar otra nota con otra fecha", "en": "There's a note for today, you can search for it and edit it or add another note with a different date"},
+    "diary_note_exists": {"es": "Ya tienes una nota para esta fecha", "en": "You already have a note for this date"},
+    "auto_date": {"es": "Fecha automática", "en": "Auto date"},
+    "diary": {"es": "Diario", "en": "Diary"},
     "notes": {"es": "Notas", "en": "Notes"},
     "content": {"es": "Contenido", "en": "Content"},
     "in_progress": {"es": "En proceso", "en": "In progress"},
