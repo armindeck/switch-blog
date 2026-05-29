@@ -31,5 +31,6 @@ $active_section = fn($section, $active) => $section == $active ? 'class="active"
         <a href="<?= route("birthday") ?>" <?= $active_section("birthday", $section) ?>><?= language("birthday") ?></a>
         <a href="<?= route("goals") ?>" <?= $active_section("goals", $section) ?>><?= language("goals") ?></a>
         <a href="<?= route("notes") ?>" <?= $active_section("notes", $section) ?>><?= language("notes") ?></a>
+        <a href="<?= route("diary") ?>" <?= $active_section("diary", $section) ?>><?= language("diary") ?></a>
     </div>
 </div>
