@@ -28,25 +28,11 @@ function filePath(string $path): string {
 }
 
 function pathFiles(string $string): string {
-    $routes = [
-        "script" => "inc/script.php",
-        "add" => "inc/actions/add.php",
-        "delete" => "inc/actions/delete.php",
-        "login" => "inc/actions/login.php",
-        "register" => "inc/actions/register.php",
-        "core" => "database/core.json",
-        "config" => "database/config.json",
-        "list" => "database/list.json",
-        "birthday" => "database/birthday.json",
-        "notes" => "database/notes.json",
-        "diary" => "database/diary.json",
-        "goals" => "database/goals.json",
-        "language" => "database/language.json",
-        "counter" => "database/counter.json",
-        "users" => "database/users.json",
-    ];
-
-    return $routes[$string] ?? $string;
+    static $cache = null;
+    if ($cache === null) {
+        $cache = read("database/path.json");
+    }
+    return $cache[$string] ?? $string;
 }
 
 function secureString(string $string): string {
