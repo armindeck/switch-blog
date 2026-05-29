@@ -109,6 +109,21 @@ switch ($view) {
         ];
         break;
 
+    case "diary":
+        if(!$model->auth()){ redirect(route("login")); }
+        
+        $list = read(pathFiles("diary"));
+        $actions->addDiary($list);
+        $actions->deleteDiary($list);
+        $data = [
+            "model" => $model,
+            "list" => $list,
+            "list_only" => array_reverse($list[$_SESSION["user"]] ?? []),
+            "user" => $_SESSION["user"],
+            "view" => $view
+        ];
+        break;
+
     case "login":
         if($model->auth()){ redirect(route()); }
         $data = ["model" => $model];
@@ -140,3 +155,4 @@ switch ($view) {
 
 counter($view);
 view("layout/$view", $data ?? []);
+unset($_SESSION["tmp_form"]);
