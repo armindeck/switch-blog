@@ -4,6 +4,7 @@
 
 - Nueva sección de diario (Markdown es soportado)
 - Corregi el bug cuando salia un error a la hora de guardar los datos y los campos quedaban vacios
+- Mejoras internas para la configuración del captcha y extructuración de archivos
 
 ## [2026-05-23] - v1.4.0
 
