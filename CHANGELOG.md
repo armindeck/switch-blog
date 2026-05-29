@@ -1,8 +1,13 @@
 # Historial de cambios
 
+## [2026-05-29] - v1.5.0
+
+- Nueva sección de diario (Markdown es soportado)
+- Corregi el bug cuando salia un error a la hora de guardar los datos y los campos quedaban vacios
+
 ## [2026-05-23] - v1.4.0
 
-- Nueva sección de notas (Funciona con Markdown)
+- Nueva sección de notas (Markdown es soportado)
 
 ## [2026-05-22] - v1.3.0
 
