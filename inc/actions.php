@@ -162,6 +162,53 @@ class Actions {
         }
     }
 
+    public function addDiary($list): void {
+        if (isset($_POST["add"]) || !empty($_POST["add"])){
+            $type = secureString($_POST["add"] ?? "");
+            $title = secureString($_POST["title"] ?? "");
+            $content = secureString($_POST["content"] ?? "");
+            $auto_date = !empty($_POST["auto_date"]);
+            $date = $auto_date ? date_year_month_day() : ($_POST["date"] ? secureString($_POST["date"]) : date_year_month_day());
+            $id = secureStringFile($date);
+            $search = isset($list[$_SESSION["user"]][$id]);
+            $replace = $type == "add" && $search && !empty($_POST["replace_note"]);
+
+            if (empty($title) || empty($content)){
+                message("error", language("fill_required"));
+                $_SESSION["tmp_form"] = ["title" => $title, "content" => $content, "date" => $date, "auto_date" => $auto_date];
+                redirect(route("diary"));
+            }
+
+            if ($type == "add" && $search && !$replace){
+                message("error", language("diary_note_exists"));
+                $_SESSION["tmp_form"] = ["title" => $title, "content" => $content, "date" => $date, "auto_date" => $auto_date, "alert_note_exists_confirm" => true];
+                redirect(route("diary"));
+            }
+
+            $list[$_SESSION["user"]][$id] = ["title" => $title, "content" => $content, "date" => $date];
+
+            $confirm = write(pathFiles("diary"), $list);
+
+            message($confirm ? "success" : "error", $confirm ? language($search ? "updated" : "added") : language("fail"));
+            redirect(route("diary"));
+        }
+    }
+
+    public function deleteDiary($list): void {
+        if (isset($_GET["action"]) && $_GET["action"] == "delete" && !empty($list) && isset($_GET["id"])){
+            $id = secureString($_GET["id"] ?? "");
+
+            $search = isset($list[$_SESSION["user"]][$id]);
+            if($search){
+                unset($list[$_SESSION["user"]][$id]);
+
+                $confirm = write(pathFiles("diary"), $list);
+                message($confirm ? "success" : "error", language($confirm ? "deleted" : "fail"));
+                redirect(route("diary"));
+            }
+        }
+    }
+
     public function addGoals($list): void {
         if (isset($_POST["add"]) || !empty($_POST["add"])){
             $goal = secureString($_POST["goal"] ?? "");
