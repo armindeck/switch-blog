@@ -1,1 +1,10 @@
-{"app_name":"Switch","app_url":"http:\/\/localhost\/switch","language":"es"}
+{
+    "app_name": "Switch",
+    "app_url": "http:\/\/localhost\/switch",
+    "language": "es",
+    "theme": "dark-aero",
+    "captcha": {
+        "private": "",
+        "public": ""
+    }
+}
