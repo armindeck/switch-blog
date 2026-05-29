@@ -26,12 +26,11 @@ SOFTWARE.
 namespace inc;
 
 class Captcha{
-    protected $secretKey = ''; // Agregar la clave secreta aquí
     protected $captchaVerificationEndpoint = 'https://hcaptcha.com/siteverify';
 
     public function checkCaptcha($response){
         $responseData = json_decode($this->verifyCaptcha([
-            'secret' => $this->secretKey,
+            'secret' => config("captcha")["private"],
             'response' => $response
         ]));
         return $responseData->success;
