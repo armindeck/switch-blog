@@ -8,7 +8,7 @@
                 <td><?= language("episode") ?></td>
                 <td><?= language("state") ?></td>
                 <td><?= language("type") ?></td>
-                <?php if(!$user || $user && $is_user_user): ?>
+                <?php if($user && $is_user_user): ?>
                 <td><?= language("action") ?></td>
                 <?php endif; ?>
             </tr>
@@ -21,10 +21,10 @@
                 <td title="<?= language("season") . ' - ' . language("episode") . ' / ' . language("episodes") ?>"><?= (!empty($value["season"]) ? "T" . $value["season"] . " - " : "") . (!empty($value["episode"]) ? $value["episode"] : "") . (!empty($value["episode"]) && !empty($value["episodes"]) ? "/" . $value["episodes"] : "") ?></td>
                 <td title="<?= language($value["state"] ?? "") ?>"><?= stateEmoji($value["state"] ?? "") ?></td>
                 <td><?= language($value["type"] ?? "") ?></td>
-                <?php if(!$user || $user && $is_user_user): ?>
-                    <td class="flex flex-between gap-4">
-                        <a href="?id=<?= $key ?? "" ?>&action=edit<?= $user ? "&to_user=true" : "" ?>">📝</a>
-                        <a href="?id=<?= $key ?? "" ?>&action=delete<?= $user ? "&to_user=true" : "" ?>" onclick="return confirm('<?= language("confirm_delete"); ?>');">❌</a>
+                <?php if($user && $is_user_user): ?>
+                    <td class="flex flex-evenly gap-4">
+                        <a href="?id=<?= $key ?? "" ?>&action=edit">📝</a>
+                        <a href="?id=<?= $key ?? "" ?>&action=delete" onclick="return confirm('<?= language("confirm_delete"); ?>');">❌</a>
                     </td>
                 <?php endif; ?>
             </tr>
