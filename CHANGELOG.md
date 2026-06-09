@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## [2026-06-09] - v1.7.0
+
+- ⚠ Hacer copia de seguridad de [list.json](./database/list.json) antes de actualizar!
+    - Quite los datos publicos y ahora solo se guardaran los de los usuarios.
+- La sección de AniPelis ahora es independiente del perfil.
+- Las secciones resivieron unas pequeñas mejoras en el diseño.
+- Corregido el bug de duplicación de contenido en el diario, ahora funciona mucho mejor y se pide mas verificación a la hora de reemplazar los demas contenidos.
+- Mejore el diseño del inicio, perfil y notas.
+
 ## [2026-05-29] - v1.5.0
 
 - Nueva sección de diario (Markdown es soportado)
