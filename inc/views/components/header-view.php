@@ -73,7 +73,7 @@ SOFTWARE.
                         </optgroup>
                         <optgroup label="<?= language("themes") ?>">
                         <?php foreach (core("themes") as $key): ?>
-                            <option value="theme.<?= $key ?>" <?= ($currentTheme === $key ? "selected" : "") ?>><?= strtoupper(substr($key, 0, 1)) . substr($key, 1, strlen($key)) ?></option>
+                            <option value="theme.<?= $key ?>" <?= ($currentTheme === $key ? "selected" : "") ?>><?= str_replace(["-", "_"], " ", (strtoupper(substr($key, 0, 1)) . substr($key, 1, strlen($key)))) ?></option>
                         <?php endforeach; ?>
                         </optgroup>
                     </select>
