@@ -29,18 +29,51 @@ $actions = new Actions\Actions;
 if (count($view_explode) == 2 && $view_explode[0] == "p"){
     $view = "profile";
     $user = $view_explode[1] ?? "";
+} else {
+    $user = $_SESSION["user"] ?? "";
 }
 
 switch ($view) {
     case "home":
+        $data = [
+            "model" => $model,
+            "view" => $view
+        ];
+        break;
     case "profile":
+        $list = read(pathFiles("list"));
+        $data = [
+            "model" => $model,
+            "list" => $list,
+            "list_only" => $list[$user ?? ""] ?? [],
+            "user" => $user ?? "",
+            "is_user_user" => isset($user) && $model->auth() && $_SESSION["user"] == $user,
+            "view" => $view,
+            "auth" => $model->auth()
+        ];
+
+        $list_state = ["watch" => [], "waiting" => [], "finalized" => []];
+        foreach ($data["list_only"] as $key => $value) {
+            $list_state[$value["state"]][$key] = $value;
+        }
+        $data["list_order_by_state"] = array_merge(array_reverse($list_state["watch"]), array_reverse($list_state["waiting"]), array_reverse($list_state["finalized"]));
+        
+        if($view == "profile" && !isset($model->allUser()[$user])){
+            $view = "error";
+            $data = ["auth" => $model->auth(), "title" => "profile_not_found", "text" => "profile_not_found_searched"];
+        }
+        break;
+        
+    case "anipelis":
+        if(!$model->auth()){ redirect(route("login")); }
+
         $list = read(pathFiles("list"));
         $actions->addListAniPelis($list, $model);
         $actions->deleteListAniPelis($list, $model);
         $data = [
             "model" => $model,
             "list" => $list,
-            "list_only" => $view == "home" ? $list["public"] ?? [] : $list["user"][$user ?? ""] ?? [],
+            "list_only" => $list[$user ?? ""] ?? [],
             "user" => $user ?? "",
             "is_user_user" => isset($user) && $model->auth() && $_SESSION["user"] == $user,
             "view" => $view
