@@ -65,8 +65,12 @@ view("components/header", ["auth" => $model->auth()]);
                     <?= language("auto_date") ?>
                 </label>
             </hgroup>
+            <?php if($add_or_edit == "edit"): ?>
+                <input type="hidden" name="id" id="id" value="<?= getListValueGetTmp($list_only, "id", "id") ?>" readonly hidden>
+            <?php endif; ?>
             <button type="submit" name="add" id="add" value="<?= $add_or_edit ?>"><?= language($add_or_edit) ?></button>
         </form>
+        <?php if(!empty($sorted_list)): ?>
         <hr>
         <?php $i = 1; foreach ($sorted_list as $key => $value): ?>
         <div class="p-8">
@@ -83,5 +87,6 @@ view("components/header", ["auth" => $model->auth()]);
             <?= MarkdownExtra::defaultTransform($value["content"] ?? "") ?>
         </div>
         <?php if($i < $list_quantity){ echo "<hr>"; } $i++; endforeach ?>
+        <?php endif; ?>
     </main>
 <?php view("components/footer"); ?>

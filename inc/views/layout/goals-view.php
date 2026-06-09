@@ -56,14 +56,15 @@ view("components/header", ["auth" => $model->auth()]);
             </hgroup>
             <button type="submit" name="add" id="add"><?= language(getListValueGetTmp($list_only, "id", "goal") ? "edit" : "add") ?></button>
         </form>
+        <?php if(!empty($list_order_by_state)): ?>
         <hr>
         <div class="p-8 scroll-auto">
             <table>
                 <thead>
                     <tr>
+                        <td title="<?= language("state") ?>">📊</td>
+                        <td title="<?= language("time") ?>">⏱️</td>
                         <td><?= language("goal") ?></td>
-                        <td><?= language("state") ?></td>
-                        <td><?= language("time") ?></td>
                         <td><?= language("date") ?></td>
                         <td><?= language("action") ?></td>
                     </tr>
@@ -71,11 +72,11 @@ view("components/header", ["auth" => $model->auth()]);
                 <tbody>
                     <?php $i = 1; foreach ($list_order_by_state as $key => $value): ?>
                     <tr <?= $i % 2 == 0 ? "style='background:rgb(0,0,0,.1);'" : ""  ?>>
+                        <td title="<?= language($value["state"]) ?>"><?= progressEmoji($value["state"]) ?></td>
+                        <td title="<?= language($value["time"]) ?>"><?= progressTime($value["time"]) ?></td>
                         <td><?= $value["goal"] ?></td>
-                        <td><?= language($value["state"]) ?></td>
-                        <td><?= language($value["time"]) ?></td>
                         <td title="<?= $value["date"] ?>"><?= strDate($value["date"]) ?></td>
-                        <td>
+                        <td class="flex flex-evenly gap-4">
                             <a href="?action=edit&id=<?= $key ?>">📝</a>
                             <a href="?action=delete&id=<?= $key ?>&confirm=1" onclick="return confirm('Quieres eliminar los datos de <?= $value["goal"] ?>');">❌</a>
                         </td>
@@ -84,5 +85,6 @@ view("components/header", ["auth" => $model->auth()]);
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </main>
 <?php view("components/footer"); ?>

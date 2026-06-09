@@ -34,6 +34,7 @@ view("components/header", ["auth" => $model->auth()]);
             <input type="date" name="date" id="date" value="<?= getListValueGetTmp($list_only, "id", "date") ?>" title="<?= language("date") ?>" required>
             <button type="submit" name="add" id="add"><?= language(getListValueGetTmp($list_only, "id", "name") ? "edit" : "add") ?></button>
         </form>
+        <?php if(!empty($list_only)): ?>
         <hr>
         <div class="p-8 scroll-auto">
             <table>
@@ -49,7 +50,7 @@ view("components/header", ["auth" => $model->auth()]);
                     <tr <?= $i % 2 == 0 ? "style='background:rgb(0,0,0,.1);'" : ""  ?>>
                         <td><?= $value["name"] ?></td>
                         <td title="<?= $value["date"] ?>"><?= strDate($value["date"]) ?></td>
-                        <td>
+                        <td class="flex flex-evenly gap-4">
                             <a href="?action=edit&id=<?= $key ?>">📝</a>
                             <a href="?action=delete&id=<?= $key ?>&confirm=1" onclick="return confirm('Quieres eliminar los datos de <?= $value["name"] ?>');">❌</a>
                         </td>
@@ -58,5 +59,6 @@ view("components/header", ["auth" => $model->auth()]);
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </main>
 <?php view("components/footer"); ?>

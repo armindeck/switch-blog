@@ -26,6 +26,15 @@ SOFTWARE.
 use Michelf\Markdown;
 use Michelf\MarkdownExtra;
 
+$add_or_edit = getListValueGetTmp($list_only, "id", "content") ? "edit" : "add";
+$note_today = !empty($list_only[date_year_month_day()]);
+$alert_note_exists_confirm = getValueTmpConfirm("alert_note_exists_confirm");
+$list_quantity = count($list_only);
+$sorted_list = $list_only;
+uasort($sorted_list, function($a, $b) {
+    return strtotime($b["date"] ?? "1970-01-01") - strtotime($a["date"] ?? "1970-01-01");
+});
+
 view("components/header", ["auth" => $model->auth()]);
 ?>
     <main class="main">
@@ -33,36 +42,30 @@ view("components/header", ["auth" => $model->auth()]);
         <?php view("components/sections", ["section" => "notes"]); ?>
         <form class="form" method="post">
             <h2><?= language("notes") ?> (<?= language("private") ?>)</h2>
-            <input type="text" name="title" id="title" placeholder="<?= language("title") ?>" title="<?= language("title") ?>" value="<?= getListValueGetTmp($list_only, "id", "title") ?>">
+            <input type="text" name="title" id="title" placeholder="<?= language("title") ?>" title="<?= language("title") ?>" value="<?= getListValueGetTmp($list_only, "id", "title") ?>" required>
             <textarea rows="10" name="content" id="content" placeholder="<?= language("content") ?>" title="<?= language("content") ?>" required><?= getListValueGetTmp($list_only, "id", "content") ?></textarea>
-            <button type="submit" name="add" id="add"><?= language(getListValueGetTmp($list_only, "id", "content") ? "edit" : "add") ?></button>
+            <?php if($add_or_edit == "edit"): ?>
+                <input type="hidden" name="id" id="id" value="<?= getListValueGetTmp($list_only, "id", "id") ?>" readonly hidden>
+            <?php endif; ?>
+            <button type="submit" name="add" id="add" value="<?= $add_or_edit ?>"><?= language($add_or_edit) ?></button>
         </form>
+        <?php if(!empty($sorted_list)): ?>
         <hr>
-        <div class="p-8 scroll-auto">
-            <table>
-                <thead>
-                    <tr>
-                        <td><?= language("notes") ?></td>
-                        <td><?= language("action") ?></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $i = 1; foreach ($list_only as $key => $value): ?>
-                    <tr <?= $i % 2 == 0 ? "style='background:rgb(0,0,0,.1);'" : ""  ?>>
-                        <td>
-                            <strong><?= $value["title"] ?? "" ?></strong><br><br>
-                            <p><?= MarkdownExtra::defaultTransform($value["content"] ?? "") ?></p>
-                            <br><br>
-                            <small style="opacity: 0.8; font-size: 12px;"><?= $value["date"] ?? "" ?></small>
-                        </td>
-                        <td>
-                            <a href="?action=edit&id=<?= $key ?>">📝</a>
-                            <a href="?action=delete&id=<?= $key ?>&confirm=1" onclick="return confirm('Quieres eliminar los datos de <?= $value["title"] ?? "" ?>');">❌</a>
-                        </td>
-                    </tr>
-                    <?php $i++; endforeach ?>
-                </tbody>
-            </table>
+        <?php $i = 1; foreach ($sorted_list as $key => $value): ?>
+        <div class="p-8">
+            <h2>
+                <?= $value["title"] ?? "" ?>
+                <div style="float: right; font-size: 18px;">
+                    <a href="?action=edit&id=<?= $key ?>">📝</a>
+                    <a href="?action=delete&id=<?= $key ?>&confirm=1" onclick="return confirm('Quieres eliminar los datos de <?= $value["title"] ?? "" ?>');">❌</a>
+                </div>
+            </h2>
+            <div style="opacity: 0.8; font-size: small; margin: 12px 0px;">
+                <time datetime="<?= $value["date"] ?? "" ?>"><?= $value["date"] ?? "" ?></time>
+            </div>
+            <?= MarkdownExtra::defaultTransform($value["content"] ?? "") ?>
         </div>
+        <?php if($i < $list_quantity){ echo "<hr>"; } $i++; endforeach ?>
+        <?php endif; ?>
     </main>
 <?php view("components/footer"); ?>
