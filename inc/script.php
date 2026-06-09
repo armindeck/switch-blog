@@ -338,3 +338,22 @@ function stateEmoji(string $state): string {
         default => ""
     };
 }
+
+function progressEmoji(string $state): string {
+    return match ($state) {
+        "in_progress" => "⏳",
+        "on_pause" => "⏸️",
+        "completed" => "✅",
+        default => ""
+    };
+}
+
+function progressTime(string $time): string {
+    return match ($time) {
+        "short" => "🌘",
+        "medium" => "🌗",
+        "long" => "🌕",
+        default => ""
+    };
+}
+
