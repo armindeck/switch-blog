@@ -36,51 +36,41 @@ class Actions {
             $state = secureString($_POST["state"] ?? "");
             $type = secureString($_POST["type"] ?? "");
             $stars = secureString($_POST["stars"] ?? "");
-            $to_user = isset($_POST["to_user"]) && !empty($_POST["to_user"]) && $model->auth();
 
             if (empty($title) || empty($episode) || empty($state) || empty($type)){
                 message("error", language("fill_required"));
                 $_SESSION["tmp_form"] = array_post(title: $title, url: $url, episode: $episode, episodes: $episodes, season: $season, state: $state, type: $type, stars: $stars);
-                redirect(route($to_user ? "p/" . $_SESSION["user"] : ""));
+                redirect(route("anipelis"));
             }
 
             if (!empty($url) && filter_var($_POST["url"] ?? "", FILTER_VALIDATE_URL) === false) {
                 message("error", language("error"));
-                redirect(route($to_user ? "p/" . $_SESSION["user"] : ""));
+                redirect(route("anipelis"));
             }
 
             $id = secureStringFile($_POST["title"] ?? "");
-            $search = $to_user ? isset($list["user"][$_SESSION["user"]][$id]) : isset($list["public"][$id]);
+            $search = isset($list[$_SESSION["user"]][$id]);
             
-            if($to_user){
-                $list["user"][$_SESSION["user"]][$id] = array_post(title: $title, url: $url, episode: $episode, episodes: $episodes, season: $season, state: $state, type: $type, stars: $stars);
-            } else {
-                $list["public"][$id] = array_post(title: $title, url: $url, episode: $episode, episodes: $episodes, season: $season, state: $state, type: $type, stars: $stars);
-            }
+            $list[$_SESSION["user"]][$id] = array_post(title: $title, url: $url, episode: $episode, episodes: $episodes, season: $season, state: $state, type: $type, stars: $stars);
 
             $confirm = write(pathFiles("list"), $list);
 
             message($confirm ? "success" : "error", $confirm ? language($search ? "updated" : "added") : language("fail"));
-            redirect(route($to_user ? "p/" . $_SESSION["user"] : ""));
+            redirect(route("anipelis"));
         }
     }
 
     public function deleteListAniPelis($list, $model): void {
         if (isset($_GET["action"]) && $_GET["action"] == "delete" && !empty($list) && isset($_GET["id"])){
             $id = secureString($_GET["id"] ?? "");
-            $to_user = isset($_GET["to_user"]) && !empty($_GET["to_user"]) && $model->auth();
 
-            $search = $to_user ? isset($list["user"][$_SESSION["user"]][$id]) : isset($list["public"][$id]);
+            $search = isset($list[$_SESSION["user"]][$id]);
             if($search){
-                if($to_user){
-                    unset($list["user"][$_SESSION["user"]][$id]);
-                } else {
-                    unset($list["public"][$id]);
-                }
+                unset($list[$_SESSION["user"]][$id]);
 
                 $confirm = write(pathFiles("list"), $list);
                 message($confirm ? "success" : "error", language($confirm ? "deleted" : "fail"));
-                redirect(route($to_user ? "p/" . $_SESSION["user"] : ""));
+                redirect(route("anipelis"));
             }
         }
     }
@@ -125,9 +115,17 @@ class Actions {
 
     public function addNotes($list): void {
         if (isset($_POST["add"]) || !empty($_POST["add"])){
+            $type = secureString($_POST["add"] ?? "");
             $title = secureString($_POST["title"] ?? "");
             $content = secureString($_POST["content"] ?? "");
-            $date = date_year_month_day_minute();
+            $date = date_year_month_day_minute_second();
+            $date_created = $date;
+            $id = secureStringFile($date);
+            $id_origin = $type == "edit" && !empty($_POST["id"]) ? secureStringFile($_POST["id"]) : $id;
+            $id_modified = $type == "edit" ? $id_origin != $id : false;
+            $search = isset($list[$_SESSION["user"]][$id]);
+            $search_id_origin = isset($list[$_SESSION["user"]][$id_origin]);
+            $dates_db = $search_id_origin ? $list[$_SESSION["user"]][$id_origin] ?? [] : [];
 
             if (empty($title) || empty($content)){
                 message("error", language("fill_required"));
@@ -135,10 +133,13 @@ class Actions {
                 redirect(route("notes"));
             }
 
-            $id = secureStringFile($_POST["title"] ?? "");
-            $search = isset($list[$_SESSION["user"]][$id]);
+            $new_list = ["id" => $id, "title" => $title, "content" => $content, "date" => $date, "date_created" => !empty($dates_db["date_created"]) ? $dates_db["date_created"] : $date_created];
             
-            $list[$_SESSION["user"]][$id] = ["title" => $title, "content" => $content, "date" => $date];
+            if($id_modified && $search_id_origin){
+                unset($list[$_SESSION["user"]][$id_origin]);
+            }
+
+            $list[$_SESSION["user"]][$id] = $new_list;
 
             $confirm = write(pathFiles("notes"), $list);
 
@@ -170,8 +171,12 @@ class Actions {
             $auto_date = !empty($_POST["auto_date"]);
             $date = $auto_date ? date_year_month_day() : ($_POST["date"] ? secureString($_POST["date"]) : date_year_month_day());
             $id = secureStringFile($date);
+            $id_origin = $type == "edit" && !empty($_POST["id"]) ? secureStringFile($_POST["id"]) : $id;
+            $id_modified = $type == "edit" ? $id_origin != $id : false;
             $search = isset($list[$_SESSION["user"]][$id]);
-            $replace = $type == "add" && $search && !empty($_POST["replace_note"]);
+            $search_id_origin = isset($list[$_SESSION["user"]][$id_origin]);
+            $dates_db = $search_id_origin ? $list[$_SESSION["user"]][$id_origin] ?? [] : [];
+            $replace = $search && !empty($_POST["replace_note"]);
 
             if (empty($title) || empty($content)){
                 message("error", language("fill_required"));
@@ -179,13 +184,19 @@ class Actions {
                 redirect(route("diary"));
             }
 
-            if ($type == "add" && $search && !$replace){
+            if ($search && !$replace && ($id_modified || $type == "add")){
                 message("error", language("diary_note_exists"));
-                $_SESSION["tmp_form"] = ["title" => $title, "content" => $content, "date" => $date, "auto_date" => $auto_date, "alert_note_exists_confirm" => true];
+                $_SESSION["tmp_form"] = ["id" => $search && $id_modified ? $id_origin : $id, "title" => $title, "content" => $content, "date" => $date, "auto_date" => $auto_date, "alert_note_exists_confirm" => true];
                 redirect(route("diary"));
             }
 
-            $list[$_SESSION["user"]][$id] = ["title" => $title, "content" => $content, "date" => $date];
+            $new_list = ["id" => $id, "title" => $title, "content" => $content, "date" => $date, "date_created" => !empty($dates_db["date_created"]) ? $dates_db["date_created"] : date_year_month_day_minute_second()];
+            
+            if($id_modified && $search_id_origin){
+                unset($list[$_SESSION["user"]][$id_origin]);
+            }
+
+            $list[$_SESSION["user"]][$id] = $new_list;
 
             $confirm = write(pathFiles("diary"), $list);
 
