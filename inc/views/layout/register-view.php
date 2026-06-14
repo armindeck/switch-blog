@@ -31,6 +31,7 @@ view("components/header", ["auth" => $model->auth()]);
             <div class="button-switch-content">
                 <a href="<?= route("login") ?>"><?= language("login") ?></a>
                 <a href="<?= route("register") ?>" class="active"><?= language("register") ?></a>
+                <a href="<?= route("forgot-password") ?>"><?= language("forgot_password") ?></a>
             </div>
         </div>
         <form method="post" class="form" id="formProcess">
