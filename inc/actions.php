@@ -269,7 +269,7 @@ class Actions {
             $h_captcha_response = $_POST["h-captcha-response"];
             
             if (!$captcha->checkCaptcha($h_captcha_response)) {
-                message("error", language("Captcha inválido"));
+                message("error", language("invalid_captcha"));
                 $_SESSION["tmp_form"] = ["user" => $user];
                 redirect("./login");
             }
@@ -297,7 +297,7 @@ class Actions {
             $h_captcha_response = $_POST["h-captcha-response"];
 
             if (!$captcha->checkCaptcha($h_captcha_response)) {
-                message("error", language("Captcha inválido"));
+                message("error", language("invalid_captcha"));
                 $_SESSION["tmp_form"] = ["user" => $user];
                 redirect("./register");
             }
@@ -321,7 +321,7 @@ class Actions {
                 strlen($pass) < 8 || strlen($pass) > 150 ||
                 !filter_var($email, FILTER_VALIDATE_EMAIL)
                 ){
-                message("error", language("llene_los_campos_con_los_datos_solicitados"));
+                message("error", language("fill_the_fields_with_the_requested_data"));
                 $_SESSION["tmp_form"] = ["user" => $user, "name" => $name, "email" => $email];
                 redirect("./register");
             }
@@ -334,6 +334,31 @@ class Actions {
 
             message($confirm["result"] ? "success" : "error", language($confirm["message"]));
             redirect("./" . (!$confirm["result"] ? "register" : ""));
+        }
+    }
+
+    public function forgotPassword($captcha, $model): void {
+        if (isset($_POST["recover_account"]) || !empty($_POST["recover_account"])){
+            $email = secureString($_POST["email"] ?? "");
+            $pin = secureString($_POST["pin"] ?? "");
+            $h_captcha_response = $_POST["h-captcha-response"];
+            
+            if (!$captcha->checkCaptcha($h_captcha_response)) {
+                message("error", language("invalid_captcha"));
+                $_SESSION["tmp_form"] = ["email" => $email, "pin" => $pin];
+                redirect("./forgot-password");
+            }
+
+            if (empty($email) || empty($pin)){
+                message("error", language("fill_required"));
+                $_SESSION["tmp_form"] = ["email" => $email, "pin" => $pin];
+                redirect("./forgot-password");
+            }
+
+            $confirm = $model->forgotPassword($email, $pin);
+
+            message($confirm["result"] ? "success" : "error", language($confirm["message"]));
+            redirect("./" . (!$confirm["result"] ? "forgot-password" : "settings/change-password"));
         }
     }
 }
