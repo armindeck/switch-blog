@@ -33,6 +33,14 @@ if (count($view_explode) == 2 && $view_explode[0] == "p"){
     $user = $_SESSION["user"] ?? "";
 }
 
+if(isset($_SESSION["redirect"])){
+    if($view != $_SESSION["redirect"]["url"]){
+        redirect(route($_SESSION["redirect"]["url"]));
+    } else {
+        unset($_SESSION["redirect"]);
+    }
+}
+
 switch ($view) {
     case "home":
         $data = [
@@ -167,6 +175,12 @@ switch ($view) {
         if($model->auth()){ redirect(route()); }
         $data = ["model" => $model];
         $actions->register(new inc\Captcha, $model);
+        break;
+        
+    case "forgot-password":
+        if($model->auth()){ redirect(route()); }
+        $data = ["model" => $model];
+        $actions->forgotPassword(new inc\Captcha, $model);
         break;
 
     case "logout":
