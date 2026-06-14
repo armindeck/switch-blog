@@ -1,5 +1,10 @@
 # Historial de cambios
 
+## [2026-06-13] - v1.8.0 (dev)
+
+- Agregue la seccíon de olvide la contraseña
+- Agregue mas idiomas y corregi unos textos que no se traducian
+
 ## [2026-06-09] - v1.7.0
 
 - ⚠ Hacer copia de seguridad de [list.json](./database/list.json) antes de actualizar!
