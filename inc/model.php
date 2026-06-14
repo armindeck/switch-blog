@@ -8,7 +8,7 @@ class model {
         $email = strtolower($email);
 
         if(isset($read[$user])){
-            return ["result" => false, "message" => "El usuario ya existe"];
+            return ["result" => false, "message" => "the_user_already_exists"];
         }
 
         $read[$user] = [
@@ -24,7 +24,7 @@ class model {
 
         $result = write(pathFiles("users"), $read);
 
-        $message = $result ? "El usuario se creo exitosamente" : "Fallo al registrar el usuario";
+        $message = $result ? "the_user_was_created_successfully" : "the_user_was_not_created_successfully";
         return ["result" => $result, "message" => $message];
     }
 
@@ -37,15 +37,15 @@ class model {
         $email = strtolower($email);
 
         if(empty($read)){
-            return ["result" => false, "message" => "No existe ningún usuario"];
+            return ["result" => false, "message" => "no_users_exist"];
         }
 
         if(!isset($read[$user_origin])){
-            return ["result" => false, "message" => "El usuario a modificar no existe"];
+            return ["result" => false, "message" => "the_user_to_modify_does_not_exist"];
         }
 
         if(isset($read[$user]) && $user_origin != $user){
-            return ["result" => false, "message" => "El usuario ya existe"];
+            return ["result" => false, "message" => "the_user_already_exists"];
         }
 
         $changes = [
@@ -75,7 +75,7 @@ class model {
         };
 
         if(empty($updates)){
-            return ["result" => false, "message" => "No se actualizo ningún dato"];
+            return ["result" => false, "message" => "no_data_was_updated"];
         }
 
         $update[$user] = array_merge($read[$user_origin], $updates);
@@ -88,7 +88,7 @@ class model {
 
         $result = write(pathFiles("users"), $update);
 
-        $message = $result ? "El usuario se modifico exitosamente" : "Fallo al modificar el usuario";
+        $message = $result ? "the_user_was_updated_successfully" : "the_user_was_not_updated_successfully";
         return ["result" => $result, "message" => $message];
     }
 
@@ -99,11 +99,11 @@ class model {
         $user = strtolower($user);
 
         if(empty($read)){
-            return ["result" => false, "message" => "No existe ningún usuario"];
+            return ["result" => false, "message" => "no_users_exist"];
         }
 
         if(!isset($read[$user])){
-            return ["result" => false, "message" => "El usuario a modificar no existe"];
+            return ["result" => false, "message" => "the_user_to_modify_does_not_exist"];
         }
 
         $update[$user]["recovery_code"] = generatePin();
@@ -112,7 +112,42 @@ class model {
 
         $result = write(pathFiles("users"), $update);
 
-        $message = $result ? "Se cambio el pin exitosamente" : "Fallo al cambiar el pin";
+        $message = $result ? "the_pin_was_changed_successfully" : "the_pin_was_not_changed";
+        return ["result" => $result, "message" => $message];
+    }
+
+    public function forgotPassword(string $email, string $pin): array {
+        $read = read(pathFiles("users"));
+        $update = $read;
+        $time = date_year_month_day_minute_second();
+        $search_user_by_email = $this->getUserByEmail($read, $email);
+        $user = $search_user_by_email["result"] ? $search_user_by_email["user"]["user"] : null;
+
+        if(empty($read)){
+            return ["result" => false, "message" => "no_users_exist"];
+        }
+
+        if($user === null || !isset($read[$user])){
+            return ["result" => false, "message" => "the_user_does_not_exist"];
+        }
+        
+        if($pin != $read[$user]["recovery_code"]){
+            return ["result" => false, "message" => "invalid_recovery_pin"];
+        }
+
+        $update[$user]["date_login"] = $time;
+        $update[$user]["history"][$time] = "login and new recovery pin";
+        $update[$user]["recovery_code"] = generatePin();
+
+        $result = write(pathFiles("users"), $update);
+        
+        if($result) {
+            $_SESSION["user"] = $user;
+            $_SESSION["token"] = generateToken();
+            $_SESSION["redirect"] = ["type" => "recover_account_by_pin", "url" => "settings/change-password"];
+        }
+
+        $message = $result ? "logged_in_successfully" : "failed_to_log_in";
         return ["result" => $result, "message" => $message];
     }
 
@@ -123,11 +158,11 @@ class model {
         $user = strtolower($user);
 
         if(empty($read)){
-            return ["result" => false, "message" => "No existe ningún usuario"];
+            return ["result" => false, "message" => "no_users_exist"];
         }
 
         if(!isset($read[$user])){
-            return ["result" => false, "message" => "El usuario no existe"];
+            return ["result" => false, "message" => "the_user_does_not_exist"];
         }
         
         if(!verifyPassword($pass, $read[$user]["pass"])){
@@ -159,5 +194,17 @@ class model {
 
     public function allUser(): array {
         return read(pathFiles("users"));
+    }
+
+    private function getUserByEmail(array $users, string $email): array {
+        $email = strtolower($email);
+
+        foreach ($users as $user) {
+            if ($user["email"] === $email) {
+                return ["result" => true, "user" => $user];
+            }
+        }
+
+        return ["result" => false, "message" => "the_user_does_not_exist"];
     }
 }
