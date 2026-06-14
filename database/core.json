@@ -1,10 +1,10 @@
 {
     "name": "Switch",
     "url": "https://github.com/armindeck/switch",
-    "version": "1.7.0",
-    "state": "beta",
+    "version": "1.8.0",
+    "state": "dev",
     "created": "2026-02-25",
-    "updated": "2026-06-09",
+    "updated": "2026-06-13",
     "languages": ["es", "en"],
     "themes": ["light", "dark", "dark-aero", "pink", "fuchsia", "cyberpunk", "matrix"]
 }
