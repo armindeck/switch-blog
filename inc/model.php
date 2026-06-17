@@ -43,6 +43,10 @@ class model {
         if(!isset($read[$user_origin])){
             return ["result" => false, "message" => "the_user_to_modify_does_not_exist"];
         }
+        
+        if(!verifyPassword($pass, $read[$user_origin]["pass"])){
+            return ["result" => false, "message" => "the_password_is_incorrect"];
+        }
 
         if(isset($read[$user]) && $user_origin != $user){
             return ["result" => false, "message" => "the_user_already_exists"];
@@ -52,7 +56,6 @@ class model {
             "user" => $read[$user_origin]["user"] == $user,
             "name" => $read[$user_origin]["name"] == $name,
             "email" => $read[$user_origin]["email"] == $email,
-            "pass" => verifyPassword($pass, $read[$user_origin]["pass"]),
         ];
 
         $updates = [];
@@ -61,8 +64,7 @@ class model {
                 $updates[$key] = match ($key) {
                     "user" => $user,
                     "name" => $name,
-                    "email" => $email,
-                    "pass" => hashPassword($pass),
+                    "email" => $email
                 };
             }
         }
@@ -87,6 +89,11 @@ class model {
         }
 
         $result = write(pathFiles("users"), $update);
+
+        if($result && $user_origin != $user){
+            $_SESSION["user"] = $user;
+            $_SESSION["token"] = generateToken();
+        }
 
         $message = $result ? "the_user_was_updated_successfully" : "the_user_was_not_updated_successfully";
         return ["result" => $result, "message" => $message];
@@ -144,7 +151,7 @@ class model {
         if($result) {
             $_SESSION["user"] = $user;
             $_SESSION["token"] = generateToken();
-            $_SESSION["redirect"] = ["type" => "recover_account_by_pin", "url" => "settings/change-password"];
+            $_SESSION["recover_account_by_pin"] = true;
         }
 
         $message = $result ? "logged_in_successfully" : "failed_to_log_in";
@@ -166,7 +173,7 @@ class model {
         }
         
         if(!verifyPassword($pass, $read[$user]["pass"])){
-            return ["result" => false, "message" => "El usuario o la contraseña es incorrecta"];
+            return ["result" => false, "message" => "the_username_or_password_is_incorrect"];
         }
 
         $update[$user]["date_login"] = $time;
@@ -179,7 +186,97 @@ class model {
             $_SESSION["token"] = generateToken();
         }
 
-        $message = $result ? "Inicio sesión exitosamente" : "Fallo al iniciar sesión";
+        $message = $result ? "the_user_logged_in_successfully" : "the_user_failed_to_log_in";
+        return ["result" => $result, "message" => $message];
+    }
+
+    public function changePass(string $user, string $current_password, string $new_password): array {
+        $read = read(pathFiles("users"));
+        $update = $read;
+        $time = date_year_month_day_minute_second();
+        $user = strtolower($user);
+
+        if(empty($read)){
+            return ["result" => false, "message" => "no_users_exist"];
+        }
+
+        if(!isset($read[$user])){
+            return ["result" => false, "message" => "the_user_does_not_exist"];
+        }
+        
+        if(!isset($_SESSION["recover_account_by_pin"]) && !verifyPassword($current_password, $read[$user]["pass"])){
+            return ["result" => false, "message" => "the_password_is_incorrect"];
+        }
+
+        $update[$user]["pass"] = hashPassword($new_password);
+        $update[$user]["date_updated"] = $time;
+        $update[$user]["history"][$time] = "change password";
+        
+        $result = write(pathFiles("users"), $update);
+
+        if($result) {
+            unset($_SESSION["recover_account_by_pin"]);
+        }
+        
+        $message = $result ? "the_password_was_changed_successfully" : "the_password_failed_to_change";
+        return ["result" => $result, "message" => $message];
+    }
+
+    public function newCode(string $user, string $password): array {
+        $read = read(pathFiles("users"));
+        $update = $read;
+        $time = date_year_month_day_minute_second();
+        $user = strtolower($user);
+
+        if(empty($read)){
+            return ["result" => false, "message" => "no_users_exist"];
+        }
+
+        if(!isset($read[$user])){
+            return ["result" => false, "message" => "the_user_does_not_exist"];
+        }
+        
+        if(!verifyPassword($password, $read[$user]["pass"])){
+            return ["result" => false, "message" => "the_password_is_incorrect"];
+        }
+
+        $update[$user]["recovery_code"] = generatePin();
+        $update[$user]["date_updated"] = $time;
+        $update[$user]["history"][$time] = ["recovery_code" => $read[$user]["recovery_code"]];
+
+        $result = write(pathFiles("users"), $update);
+
+        $message = $result ? "the_pin_was_changed_successfully" : "the_pin_was_not_changed";
+        return ["result" => $result, "message" => $message];
+    }
+
+    public function deleteAccount(string $user, string $password): array {
+        $read = read(pathFiles("users"));
+        $update = $read;
+        $user = strtolower($user);
+
+        if(empty($read)){
+            return ["result" => false, "message" => "no_users_exist"];
+        }
+
+        if(!isset($read[$user])){
+            return ["result" => false, "message" => "the_user_does_not_exist"];
+        }
+        
+        if(!verifyPassword($password, $read[$user]["pass"])){
+            return ["result" => false, "message" => "the_password_is_incorrect"];
+        }
+
+        unset($update[$user]);
+        
+        $result = write(pathFiles("users"), $update);
+        
+        if($result) {
+            unset($_SESSION["user"]);
+            unset($_SESSION["token"]);
+        }
+
+        $message = $result ? "the_account_was_deleted_successfully" : "the_account_failed_to_delete";
         return ["result" => $result, "message" => $message];
     }
 
