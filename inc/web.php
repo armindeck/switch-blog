@@ -33,14 +33,6 @@ if (count($view_explode) == 2 && $view_explode[0] == "p"){
     $user = $_SESSION["user"] ?? "";
 }
 
-if(isset($_SESSION["redirect"])){
-    if($view != $_SESSION["redirect"]["url"]){
-        redirect(route($_SESSION["redirect"]["url"]));
-    } else {
-        unset($_SESSION["redirect"]);
-    }
-}
-
 switch ($view) {
     case "home":
         $data = [
@@ -181,6 +173,15 @@ switch ($view) {
         if($model->auth()){ redirect(route()); }
         $data = ["model" => $model];
         $actions->forgotPassword(new inc\Captcha, $model);
+        break;
+        
+    case "settings":
+        if(!$model->auth()){ redirect(route("login")); }
+        $data = ["model" => $model, "user" => $user ?? "", "auth" => $model->auth(), "view" => $view, "recover_account_by_pin" => $_SESSION["recover_account_by_pin"] ?? false];
+        $actions->updateProfile($model);
+        $actions->changePass($model);
+        $actions->newCode($model);
+        $actions->deleteAccount($model);
         break;
 
     case "logout":
