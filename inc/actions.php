@@ -266,13 +266,8 @@ class Actions {
         if (isset($_POST["login"]) || !empty($_POST["login"])){
             $user = secureString($_POST["user"] ?? "");
             $pass = $_POST["password"] ?? "";
-            $h_captcha_response = $_POST["h-captcha-response"];
             
-            if (!$captcha->checkCaptcha($h_captcha_response)) {
-                message("error", language("invalid_captcha"));
-                $_SESSION["tmp_form"] = ["user" => $user];
-                redirect("./login");
-            }
+            $this->verify_captcha($captcha, ["user" => $user], "login");
 
             if (empty($user) || empty($pass)){
                 message("error", language("fill_required"));
@@ -294,13 +289,8 @@ class Actions {
             $email = secureString($_POST["email"] ?? "");
             $pass = $_POST["password"] ?? "";
             $pass_confirm = $_POST["confirm_password"] ?? "";
-            $h_captcha_response = $_POST["h-captcha-response"];
-
-            if (!$captcha->checkCaptcha($h_captcha_response)) {
-                message("error", language("invalid_captcha"));
-                $_SESSION["tmp_form"] = ["user" => $user];
-                redirect("./register");
-            }
+            
+            $this->verify_captcha($captcha, ["user" => $user, "name" => $name, "email" => $email], "register");
 
             if (empty($user) || empty($name) || empty($email) || empty($pass) || empty($pass_confirm)){
                 message("error", language("fill_required"));
@@ -341,13 +331,7 @@ class Actions {
         if (isset($_POST["recover_account"]) || !empty($_POST["recover_account"])){
             $email = secureString($_POST["email"] ?? "");
             $pin = secureString($_POST["pin"] ?? "");
-            $h_captcha_response = $_POST["h-captcha-response"];
-            
-            if (!$captcha->checkCaptcha($h_captcha_response)) {
-                message("error", language("invalid_captcha"));
-                $_SESSION["tmp_form"] = ["email" => $email, "pin" => $pin];
-                redirect("./forgot-password");
-            }
+            $this->verify_captcha($captcha, ["email" => $email, "pin" => $pin], "forgot-password");
 
             if (empty($email) || empty($pin)){
                 message("error", language("fill_required"));
@@ -358,7 +342,125 @@ class Actions {
             $confirm = $model->forgotPassword($email, $pin);
 
             message($confirm["result"] ? "success" : "error", language($confirm["message"]));
-            redirect("./" . (!$confirm["result"] ? "forgot-password" : "settings/change-password"));
+            redirect("./" . (!$confirm["result"] ? "forgot-password" : "settings#change-password"));
+        }
+    }
+
+    public function updateProfile($model): void {
+        if (isset($_POST["update_profile"]) || !empty($_POST["update_profile"])){
+            $user_origin = $_SESSION["user"] ?? "";
+            $user = secureString($_POST["user"] ?? "");
+            $name = secureString($_POST["name"] ?? "");
+            $email = secureString($_POST["email"] ?? "");
+            $pass = $_POST["password"] ?? "";
+
+            if (empty($user) || empty($name) || empty($email) || empty($pass)){
+                message("error", language("fill_required"));
+                $_SESSION["tmp_form"] = ["user" => $user, "name" => $name, "email" => $email];
+                redirect("./settings");
+            }
+
+            if (
+                strlen($user) < 4 || strlen($user) > 25 ||
+                strlen($name) < 4 || strlen($name) > 25 ||
+                strlen($email) < 4 || strlen($email) > 150 ||
+                strlen($pass) < 8 || strlen($pass) > 150 ||
+                !filter_var($email, FILTER_VALIDATE_EMAIL)
+                ){
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                $_SESSION["tmp_form"] = ["user" => $user, "name" => $name, "email" => $email];
+                redirect("./settings");
+            }
+
+            $confirm = $model->updateUser($user_origin, $user, $name, $email, $pass);
+
+            message($confirm["result"] ? "success" : "error", language($confirm["message"]));
+            redirect("./settings");
+        }
+    }
+
+    public function changePass($model): void {
+        if (isset($_POST["change_pass"]) || !empty($_POST["change_pass"])){
+            $user_origin = $_SESSION["user"] ?? "";
+            $current_password = $_POST["current_password"] ?? "";
+            $new_password = $_POST["new_password"] ?? "";
+            $confirm_new_password = $_POST["confirm_new_password"] ?? "";
+            $empty_current_password_if = !isset($_SESSION["recover_account_by_pin"]) && empty($current_password);
+            $empty_current_password_if_strlen = !isset($_SESSION["recover_account_by_pin"]) && (strlen($current_password) < 8 || strlen($current_password) > 150);
+
+            if ($empty_current_password_if || empty($new_password) || empty($confirm_new_password)){
+                message("error", language("fill_required"));
+                redirect("./settings");
+            }
+
+            if (
+                $empty_current_password_if_strlen ||
+                strlen($new_password) < 8 || strlen($new_password) > 150 ||
+                strlen($confirm_new_password) < 8 || strlen($confirm_new_password) > 150 ||
+                $new_password !== $confirm_new_password
+                ){
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                redirect("./settings");
+            }
+
+            $confirm = $model->changePass($user_origin, $current_password, $new_password);
+
+            message($confirm["result"] ? "success" : "error", language($confirm["message"]));
+            redirect("./settings#");
+        }
+    }
+
+    public function newCode($model): void {
+        if (isset($_POST["new_code"]) || !empty($_POST["new_code"])){
+            $user_origin = $_SESSION["user"] ?? "";
+            $password = $_POST["password"] ?? "";
+
+            if (empty($password)){
+                message("error", language("fill_required"));
+                redirect("./settings");
+            }
+
+            if (strlen($password) < 8 || strlen($password) > 150){
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                redirect("./settings");
+            }
+
+            $confirm = $model->newCode($user_origin, $password);
+
+            message($confirm["result"] ? "success" : "error", language($confirm["message"]));
+            redirect("./settings");
+        }
+    }
+
+    public function deleteAccount($model): void {
+        if (isset($_POST["delete_account"]) || !empty($_POST["delete_account"])){
+            $user_origin = $_SESSION["user"] ?? "";
+            $password = $_POST["password"] ?? "";
+
+            if (empty($password)){
+                message("error", language("fill_required"));
+                redirect("./settings");
+            }
+
+            if (strlen($password) < 8 || strlen($password) > 150){
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                redirect("./settings");
+            }
+
+            $confirm = $model->deleteAccount($user_origin, $password);
+
+            message($confirm["result"] ? "success" : "error", language($confirm["message"]));
+            redirect("./" . (!$confirm["result"] ? "settings" : "login"));
+        }
+    }
+
+    private function verify_captcha($captcha, array $tmp_list, string $route): void {
+        $h_captcha_response = $_POST["h-captcha-response"];
+
+        if (!$captcha->checkCaptcha($h_captcha_response)) {
+            message("error", language("invalid_captcha"));
+            $_SESSION["tmp_form"] = $tmp_list;
+            redirect("./" . $route);
         }
     }
 }
