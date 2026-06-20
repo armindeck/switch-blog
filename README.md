@@ -20,7 +20,10 @@ Aplicación web PHP moderna y versátil para gestionar múltiples aspectos de tu
 - **Inicio** (Home) - Página principal
 - **Login** - Iniciar sesión
 - **Registro** - Crear nueva cuenta
+- **Olvide la contraseña** - Recuperar cuenta por pin
 - **Perfil** - Información del usuario
+- **Configuración** - Modificar la información del usuario
+- **AniPelis** - Listado de animes, peliculas, series
 - **Diario** - Notas personales por fecha
 - **Notas** - Listado de notas
 - **Objetivos** - Gestión de metas y tareas
