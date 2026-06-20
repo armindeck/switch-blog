@@ -349,7 +349,7 @@ class Actions {
     public function updateProfile($model): void {
         if (isset($_POST["update_profile"]) || !empty($_POST["update_profile"])){
             $user_origin = $_SESSION["user"] ?? "";
-            $user = secureString($_POST["user"] ?? "");
+            $user = $user_origin;
             $name = secureString($_POST["name"] ?? "");
             $email = secureString($_POST["email"] ?? "");
             $pass = $_POST["password"] ?? "";

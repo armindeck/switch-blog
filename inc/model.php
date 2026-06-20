@@ -33,7 +33,7 @@ class model {
         $update = $read;
         $time = date_year_month_day_minute_second();
         $user_origin = strtolower($user_origin);
-        $user = strtolower($user);
+        $user = $user_origin;
         $email = strtolower($email);
 
         if(empty($read)){

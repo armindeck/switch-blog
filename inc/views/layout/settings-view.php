@@ -80,7 +80,9 @@ $user_data = $model->allUser()[$user] ?? [];
             <h3><?= language("edit_profile") ?></h3>
             <form method="post" class="form">
                 <input type="hidden" name="action" value="edit_profile">
+                <!--
                 <input type="text" name="user" id="user" placeholder="<?= language("user") ?>" minlength="4" maxlength="25" value="<?= getValueTmp("user") ?: $user_data["user"] ?? "" ?>" required>
+                -->
                 <input type="text" name="name" id="name" placeholder="<?= language("name") ?>" minlength="4" maxlength="50" value="<?= getValueTmp("name") ?: $user_data["name"] ?? "" ?>" required>
                 <input type="email" name="email" id="email" placeholder="<?= language("email") ?>" minlength="4" maxlength="150" value="<?= getValueTmp("email") ?: $user_data["email"] ?? "" ?>" required>
                 <input type="password" name="password" placeholder="<?= language("password") ?>" minlength="8" maxlength="150" required>
