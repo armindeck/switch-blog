@@ -929,7 +929,12 @@ td {
 
 .content, tbody ul, tbody ol, .main ul, .main ol {
     padding-left: 20px;
-    line-height: 24px;
+    line-height: 1.6;
+    margin: 15px auto;
+}
+
+p {
+    line-height: 1.6;
 }
 
 .content {
