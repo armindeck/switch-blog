@@ -1,8 +1,7 @@
 # Historial de cambios
 
-## [2026-06-16] - v1.8.0 (dev)
+## [2026-06-20] - v1.8.0
 
-- ⚠ Si el usuario edita el id usuario los datos de los listados no se cambiaran ni se mostraran, esta en desarrollo.
 - Agregue la sección de configuración del usuario
     - Editar datos
     - Cambiar contraseña
@@ -10,6 +9,7 @@
     - Eliminar cuenta
 - Agregue la seccíon de olvide la contraseña
 - Agregue mas idiomas y corregi unos textos que no se traducian
+- Agregue mas espaciado en las letras y listas
 
 ## [2026-06-09] - v1.7.0
 
