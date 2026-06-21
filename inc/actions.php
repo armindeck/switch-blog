@@ -454,6 +454,127 @@ class Actions {
         }
     }
 
+    public function createBlogPost($blog, $model): void {
+        if (isset($_POST["create_post"]) || !empty($_POST["create_post"])){
+            $title = secureString($_POST["title"] ?? "");
+            $category = secureString($_POST["category"] ?? "");
+            $excerpt = secureString($_POST["excerpt"] ?? "");
+            $content = $_POST["content"] ?? "";
+            $image = htmlspecialchars($_POST["image"] ?? "", ENT_QUOTES, 'UTF-8');
+
+            if (empty($title) || empty($category) || empty($excerpt) || empty($content)){
+                message("error", language("fill_required"));
+                $_SESSION["tmp_form"] = array_post(title: $title, category: $category, excerpt: $excerpt, image: $image);
+                redirect(route("new-post"));
+            }
+
+            if (strlen($title) < 5 || strlen($title) > 200 || 
+                strlen($excerpt) < 10 || strlen($excerpt) > 250 || 
+                strlen($content) < 20){
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                $_SESSION["tmp_form"] = array_post(title: $title, category: $category, excerpt: $excerpt, image: $image);
+                redirect(route("new-post"));
+            }
+
+            if (!empty($image) && filter_var($image, FILTER_VALIDATE_URL) === false) {
+                message("error", language("invalid_image_url"));
+                $_SESSION["tmp_form"] = array_post(title: $title, category: $category, excerpt: $excerpt, image: $image);
+                redirect(route("new-post"));
+            }
+
+            $id = "blog_" . date("YmdHis") . "_" . random_int(1000, 9999);
+            $time = date_year_month_day_minute_second();
+            
+            // Generate slug from title
+            $slug = strtolower(trim(preg_replace('/[^\w\s-]/', '', $title)));
+            $slug = preg_replace('/\s+/', '-', $slug);
+            $slug = preg_replace('/-+/', '-', $slug);
+            $slug = trim($slug, '-');
+
+            $blog[$id] = [
+                "id" => $id,
+                "author" => $_SESSION["user"] ?? "anonymous",
+                "title" => $title,
+                "category" => $category,
+                "excerpt" => $excerpt,
+                "content" => $content,
+                "image" => $image,
+                "slug" => $slug,
+                "date_published" => $time,
+                "date_created" => $time,
+                "status" => "published",
+                "views" => 0,
+                "likes" => 0
+            ];
+
+            $confirm = write(pathFiles("blog"), $blog);
+
+            message($confirm ? "success" : "error", $confirm ? language("post_created") : language("post_failed"));
+            redirect($confirm ? route("home") : route("new-post"));
+        }
+    }
+
+    public function updateBlogPost($blog, $post_slug, $model): void {
+        if (isset($_POST["update_post"])) {
+            // Sanitizar entradas
+            $title = secureString($_POST["title"] ?? "");
+            $category = secureString($_POST["category"] ?? "");
+            $excerpt = secureString($_POST["excerpt"] ?? "");
+            $content = $_POST["content"] ?? "";
+            $image = htmlspecialchars($_POST["image"] ?? "", ENT_QUOTES, 'UTF-8');
+
+            // Validaciones
+            if (empty($title) || empty($category) || empty($excerpt) || empty($content)) {
+                message("error", language("fill_required"));
+                $_SESSION["tmp_form"] = array_post(title: $title, category: $category, excerpt: $excerpt, image: $image);
+                redirect(route("edit-post/" . $post_slug));
+            }
+
+            if (strlen($title) < 5 || strlen($title) > 200 || 
+                strlen($excerpt) < 10 || strlen($excerpt) > 250 || 
+                strlen($content) < 20) {
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                $_SESSION["tmp_form"] = array_post(title: $title, category: $category, excerpt: $excerpt, image: $image);
+                redirect(route("edit-post/" . $post_slug));
+            }
+
+            if (!empty($image) && filter_var($image, FILTER_VALIDATE_URL) === false) {
+                message("error", language("invalid_image_url"));
+                $_SESSION["tmp_form"] = array_post(title: $title, category: $category, excerpt: $excerpt, image: $image);
+                redirect(route("edit-post/" . $post_slug));
+            }
+
+            // Buscar el post por slug
+            $found_key = null;
+            foreach ($blog as $key => $post) {
+                if (($post["slug"] ?? "") === $post_slug) {
+                    $found_key = $key;
+                    break;
+                }
+            }
+
+            if ($found_key === null) {
+                message("error", language("post_not_found"));
+                redirect(route("home"));
+            }
+
+            // Actualizar datos
+            $blog[$found_key]["title"] = $title;
+            $blog[$found_key]["category"] = $category;
+            $blog[$found_key]["excerpt"] = $excerpt;
+            $blog[$found_key]["content"] = $content;
+            $blog[$found_key]["image"] = $image;
+            // Opcional: actualizar slug si cambia el título (puede romper enlaces)
+            // $blog[$found_key]["slug"] = generarSlug($title);
+            $blog[$found_key]["updated_at"] = date_year_month_day_minute_second();
+
+            // Guardar cambios
+            $confirm = write(pathFiles("blog"), $blog);
+            message($confirm ? "success" : "error", $confirm ? language("post_updated") : language("post_update_failed"));
+            redirect($confirm ? route("blog/" . $post_slug) : route("edit-post/" . $post_slug));
+        }
+    }
+
     private function verify_captcha($captcha, array $tmp_list, string $route): void {
         $h_captcha_response = $_POST["h-captcha-response"];
 
@@ -461,6 +582,59 @@ class Actions {
             message("error", language("invalid_captcha"));
             $_SESSION["tmp_form"] = $tmp_list;
             redirect("./" . $route);
+        }
+    }
+
+    public function likeBlogPost($blog, $model): void {
+        if (isset($_POST["like_post"]) || !empty($_POST["like_post"])){
+            $post_slug = secureString($_POST["post_slug"] ?? "");
+            $user = $_SESSION["user"] ?? "";
+
+            if (empty($post_slug) || empty($user)){
+                message("error", language("error"));
+                redirect(route("home"));
+            }
+
+            // Find post by slug
+            $post_key = null;
+            foreach($blog as $key => $blog_post) {
+                if(($blog_post["slug"] ?? "") === $post_slug) {
+                    $post_key = $key;
+                    break;
+                }
+            }
+
+            if (!$post_key) {
+                message("error", language("post_not_found"));
+                redirect(route("home"));
+            }
+
+            // Initialize likes array if not exists
+            if (!isset($blog[$post_key]["liked_by"])) {
+                $blog[$post_key]["liked_by"] = [];
+            }
+
+            // Check if user already liked
+            $user_already_liked = in_array($user, $blog[$post_key]["liked_by"]);
+
+            if ($user_already_liked) {
+                // Remove like
+                $blog[$post_key]["liked_by"] = array_filter($blog[$post_key]["liked_by"], function($u) use ($user) {
+                    return $u !== $user;
+                });
+                $blog[$post_key]["likes"] = ($blog[$post_key]["likes"] ?? 1) - 1;
+                $message = "like_removed";
+            } else {
+                // Add like
+                $blog[$post_key]["liked_by"][] = $user;
+                $blog[$post_key]["likes"] = ($blog[$post_key]["likes"] ?? 0) + 1;
+                $message = "post_liked";
+            }
+
+            $confirm = write(pathFiles("blog"), $blog);
+
+            message($confirm ? "success" : "error", $confirm ? language($message) : language("fail"));
+            redirect(route("blog") . "/" . urlencode($post_slug));
         }
     }
 }
