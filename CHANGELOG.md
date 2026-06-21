@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## [2026-06-21] - v2.0.0 (Variante)
+
+Esta es una variante que sera exclusivamente para blogs.
+
+- Cambie la entrada princial, ahora apareceran las publicaciones, (Nuevo post) y redes sociales
+- Agregue la entrada de los posts *"/blog/[slug]"*
+- Agregue la pagina de crear un nuevo post *"/new-post"*
+- Agregue la pagina de modificar/editar post *"/edit-post/[slug]"*
+
 ## [2026-06-20] - v1.8.0
 
 - Agregue la sección de configuración del usuario
