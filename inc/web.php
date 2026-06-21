@@ -29,15 +29,86 @@ $actions = new Actions\Actions;
 if (count($view_explode) == 2 && $view_explode[0] == "p"){
     $view = "profile";
     $user = $view_explode[1] ?? "";
-} else {
+} 
+// Blog Posts
+elseif (count($view_explode) == 2 && $view_explode[0] == "blog"){
+    $view = "blog";
+    $post_id = $view_explode[1] ?? "";
+}
+// Edit Post (NUEVO)
+elseif (count($view_explode) == 2 && $view_explode[0] == "edit-post"){
+    $view = "edit-post";
+    $post_slug = $view_explode[1] ?? "";
+}
+else {
     $user = $_SESSION["user"] ?? "";
 }
 
 switch ($view) {
     case "home":
         $data = [
-            "model" => $model,
-            "view" => $view
+            "auth" => $model->auth(),
+            "all_users" => $model->allUser(),
+            "user_auth" => $_SESSION["user"] ?? null,
+            "blog_data" => read(pathFiles("blog")) ?? [],
+        ];
+        break;
+
+    case "blog":
+        $blog_data = read(pathFiles("blog")) ?? [];
+        
+        // Handle like/unlike action
+        if (isset($_POST["like_post"]) && $model->auth()) {
+            $actions->likeBlogPost($blog_data, $model);
+        }
+        
+        $post_slug = $post_id ?? "";
+        $post = null;
+        $post_key = null;
+        
+        // Search post by slug
+        foreach($blog_data as $key => $blog_post) {
+            if(($blog_post["slug"] ?? "") === $post_slug) {
+                $post = $blog_post;
+                $post_key = $key;
+                break;
+            }
+        }
+        
+        if($post && $post_key) {
+            // Increment views
+            $blog_data[$post_key]["views"] = ($blog_data[$post_key]["views"] ?? 0) + 1;
+            write(pathFiles("blog"), $blog_data);
+        }
+        
+        $data = [
+            "auth" => $model->auth(),
+            "post" => $post,
+            "post_slug" => $post_slug,
+            "user_auth" => $_SESSION["user"] ?? null
+        ];
+        break;
+    case "edit-post":
+        $blog_data = read(pathFiles("blog")) ?? [];
+        $actions->updateBlogPost($blog_data, $post_slug, $model);
+        
+        $post = null;
+        $post_key = null;
+        
+        // Search post by slug
+        foreach($blog_data as $key => $blog_post) {
+            if(($blog_post["slug"] ?? "") === $post_slug) {
+                $post = $blog_post;
+                $post_key = $key;
+                break;
+            }
+        }
+        
+        $data = [
+            "auth" => $model->auth(),
+            "post" => $post,
+            "post_slug" => $post_slug,
+            "user_auth" => $_SESSION["user"] ?? null
         ];
         break;
     case "profile":
@@ -154,6 +225,18 @@ switch ($view) {
             "list_only" => array_reverse($list[$_SESSION["user"]] ?? []),
             "user" => $_SESSION["user"],
             "view" => $view
+        ];
+        break;
+
+    case "new-post":
+        //if(!$model->auth()){ redirect(route("login")); }
+        
+        $blog = read(pathFiles("blog")) ?? [];
+        $actions->createBlogPost($blog, $model);
+        $data = [
+            "auth" => $model->auth(),
+            "model" => $model,
+            "user" => $_SESSION["user"] ?? ""
         ];
         break;
 
