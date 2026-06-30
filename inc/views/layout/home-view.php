@@ -118,7 +118,7 @@ $total_posts = count($published_posts);
                 <p style="margin: 0 0 15px 0; font-size: 14px; color: var(--text-co);">
                     <?= language("create_blog_post") ?>
                 </p>
-                <a href="<?= route("new-post") ?>" style="background: var(--success-bg); color: var(--success-co); padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; transition: all 0.3s ease;">
+                <a href="<?= route("dashboard/posts/new") ?>" style="background: var(--success-bg); color: var(--success-co); padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; transition: all 0.3s ease;">
                     <?= language("create_post") ?>
                 </a>
             </div>
