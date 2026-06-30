@@ -35,10 +35,9 @@ elseif (count($view_explode) == 2 && $view_explode[0] == "blog"){
     $view = "blog";
     $post_id = $view_explode[1] ?? "";
 }
-// Edit Post (NUEVO)
-elseif (count($view_explode) == 2 && $view_explode[0] == "edit-post"){
-    $view = "edit-post";
-    $post_slug = $view_explode[1] ?? "";
+// Dashboard
+elseif (count($view_explode) >= 2 && $view_explode[0] == "dashboard"){
+    $view = "dashboard";
 }
 else {
     $user = $_SESSION["user"] ?? "";
@@ -88,29 +87,7 @@ switch ($view) {
             "user_auth" => $_SESSION["user"] ?? null
         ];
         break;
-    case "edit-post":
-        $blog_data = read(pathFiles("blog")) ?? [];
-        $actions->updateBlogPost($blog_data, $post_slug, $model);
-        
-        $post = null;
-        $post_key = null;
-        
-        // Search post by slug
-        foreach($blog_data as $key => $blog_post) {
-            if(($blog_post["slug"] ?? "") === $post_slug) {
-                $post = $blog_post;
-                $post_key = $key;
-                break;
-            }
-        }
-        
-        $data = [
-            "auth" => $model->auth(),
-            "post" => $post,
-            "post_slug" => $post_slug,
-            "user_auth" => $_SESSION["user"] ?? null
-        ];
-        break;
+
     case "profile":
         $list = read(pathFiles("list"));
         $data = [
@@ -228,18 +205,6 @@ switch ($view) {
         ];
         break;
 
-    case "new-post":
-        //if(!$model->auth()){ redirect(route("login")); }
-        
-        $blog = read(pathFiles("blog")) ?? [];
-        $actions->createBlogPost($blog, $model);
-        $data = [
-            "auth" => $model->auth(),
-            "model" => $model,
-            "user" => $_SESSION["user"] ?? ""
-        ];
-        break;
-
     case "login":
         if($model->auth()){ redirect(route()); }
         $data = ["model" => $model];
@@ -278,11 +243,42 @@ switch ($view) {
         $data = ["auth" => $model->auth(), "users" => $model->allUser()];
         break;
 
+    case "dashboard":
+        if(!$model->auth()){ redirect(route("login")); }
+
+        $get_section = $view_explode[1] ?? "";
+        $get_action = $view_explode[2] ?? "";
+        $get_id = $view_explode[3] ?? "";
+
+        $data = [
+            "user" => $_SESSION["user"] ?? null,
+            "user_auth" => $model->auth(),
+            "get_section" => $get_section,
+            "get_action" => $get_action,
+            "get_id" => $get_id,
+            "dashboard_data" => read(pathFiles("dashboard")) ?? [],
+        ];
+
+        if($get_section == "posts"){
+            $data["blog_data"] = read(pathFiles("blog")) ?? [];
+
+            if($get_action == "new"){
+                $actions->createBlogPost($data["blog_data"], $model);
+            }
+            
+            if($get_action == "edit"){
+                $actions->updateBlogPost($data["blog_data"], $get_id, $model);
+            }
+        }
+        break;
+
     default:
         $data = ["auth" => $model->auth()];
         $view = "error";
         break;
 }
+
+$data["data_origin"] = $data;
 
 counter($view);
 view("layout/$view", $data ?? []);
