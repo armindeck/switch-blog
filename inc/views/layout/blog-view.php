@@ -33,10 +33,17 @@ view("components/header", ["auth" => $auth]);
 
         <?php if($post): ?>
             <div class="content">
-                <!-- Header -->
-                <a href="<?= route("home") ?>" style="color: var(--text-link-co); text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 20px; font-size: 14px;">
-                    ← <?= language("back") ?>
-                </a>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <!-- Header -->
+                    <a href="<?= route("home") ?>" style="color: var(--text-link-co); text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 20px; font-size: 14px;">
+                        ← <?= language("back") ?>
+                    </a>
+                    <?php if($auth): ?>
+                        <a href="<?= route("dashboard/posts/edit/" . htmlspecialchars($post_slug)) ?>" style="color: var(--text-link-co); text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 20px; font-size: 14px;">
+                            ✏️ <?= language("edit") ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
 
                 <!-- Post Container -->
                 <article style="background: var(--back-secondary); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.15); padding: 0;">
