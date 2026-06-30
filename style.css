@@ -927,6 +927,10 @@ td {
     padding: 4px;
 }
 
+.content table {
+    margin: 13px 0;
+}
+
 .content, tbody ul, tbody ol, .main ul, .main ol {
     padding-left: 20px;
     line-height: 1.6;
