@@ -32,10 +32,11 @@ $isset_section = isset($sections[$get_section]);
 $show_sections = empty($get_section) || !$isset_section;
 $show_hero = $show_sections && !$isset_section;
 $show_hero_two = !$show_hero && $isset_section;
-$show_hero_not_found = $show_sections && !$isset_section;
+$show_hero_not_found = $show_sections && !empty($get_section) && !$isset_section;
 
 $show_view = !empty($get_section) && $isset_section;
 
+$dir = get_slug() == "dashboard/" ? "../" : path_directory();
 ?>
     <main class="main">
         <?php view("components/message"); ?>
@@ -81,7 +82,7 @@ $show_view = !empty($get_section) && $isset_section;
             <h2 style="margin-bottom: 25px; font-size: 24px;"><?= language("sections") ?></h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 30px;">
                 <?php foreach ($sections as $key => $value): ?>
-                <a href="<?= route("dashboard/{$value['id']}") ?>" style="text-decoration: none; color: inherit;">
+                <a href="<?= "{$dir}dashboard/{$value['id']}" ?>" style="text-decoration: none; color: inherit;">
                     <div style="background: linear-gradient(135deg, <?= $value["bg"] ?>); padding: 25px; border-radius: 10px; text-align: center; border: 1px solid rgba(102, 126, 234, 0.2); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                         <div style="font-size: 32px; margin-bottom: 8px;"><?= $value["icon"] ?></div>
                         <p style="margin: 8px 0 0 0; font-size: 12px; opacity: 0.8;"><?= language($value["name"]) ?></p>
