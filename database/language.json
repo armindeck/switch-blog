@@ -1,4 +1,10 @@
 {
+    "personal": {"es": "Personal", "en": "Personal"},
+    "about_me": {"es": "Acerca de", "en": "About me"},
+    "social_networks": {"es": "Redes sociales", "en": "Social networks"},
+    "version": {"es": "Versión", "en": "Version"},
+    "creator": {"es": "Creador", "en": "Creator"},
+    "core": {"es": "Núcleo", "en": "Core"},
     "null": {"es": "Nulo", "en": "Null"},
     "section_not_found": {"es": "Sección no encontrada", "en": "Section not found"},
     "section_not_found_text": {"es": "Lo sentimos, la sección que buscas no existe o ha sido eliminada.", "en": "Sorry, the section you are looking for does not exist or has been deleted."},
