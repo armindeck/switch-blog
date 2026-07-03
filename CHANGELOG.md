@@ -1,9 +1,11 @@
 # Historial de cambios
 
-## [2026-06-29] - v2.0.0 (Variante)
+## [2026-07-02] - v2.0.0 (Variante)
 
 Esta es una variante que sera exclusivamente para blogs.
 
+- Mejore el diseño de la sección **posts/articulos** en el panel administrativo.
+- Agregue la sección de información en el panel administrativo.
 - Ahora en los articulos aparecera un enlace para editarlo.
 - Agregue la vista el dashboard y sus secciones
 - Cambie la entrada princial, ahora apareceran las publicaciones, (Nuevo post) y redes sociales
