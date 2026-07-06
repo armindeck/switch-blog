@@ -1,0 +1,49 @@
+# switch - MIT License - (c) 2026 Armin Deck - https://github.com/armindeck/switch
+
+# ================================
+# Configuración de errores y entorno
+# ================================
+# REPLACE_SHOW_ERROR
+
+# Charset por defecto
+AddDefaultCharset UTF-8
+
+# Zona horaria
+# REPLACE_TIMEZONE
+
+# ================================
+# Seguridad
+# ================================
+
+# Bloquear listado de directorios (403 Forbidden si no hay index.php/html)
+Options -Indexes
+
+# Bloquear acceso a archivos ocultos (.htaccess, .gitignore, .env, etc.)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Bloquear acceso a archivos sensibles típicos
+<FilesMatch "(composer\.json|composer\.lock|package\.json|database\.json|yarn\.lock|phpunit\.xml|\.env)">
+    Require all denied
+</FilesMatch>
+
+# ================================
+# Sistema de rutas
+# ================================
+RewriteEngine On
+# REPLACE_REDIRECT_HTTPS
+
+# Permitir acceso directo a /assets
+RewriteCond %{REQUEST_URI} ^/(assets)/ [NC]
+RewriteRule ^ - [L]
+
+# Redirigir todo lo demás a index.php (router)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?slug=$1 [L,QSA]
+
+# ================================
+# Errores personalizados
+# ================================
+# REPLACE_ERROR_LINK
