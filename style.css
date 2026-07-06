@@ -5,6 +5,8 @@
     --text-co-secondary: #111;
     --text-link-co: #0066cc;
     --text-link-hover-co: #0052a3;
+    --content-border-co: rgba(0,0,0,.2);
+    --content-border-strong-co: rgba(0,0,0,.3);
 
     --back-primary: #f5f5f5;
     --back-secondary: #fff;
@@ -50,6 +52,8 @@
     --text-co-secondary: #e0e0e0;
     --text-link-co: #64b5f6;
     --text-link-hover-co: #90caf9;
+    --content-border-co: rgba(0,0,0,.7);
+    --content-border-strong-co: rgba(0,0,0,1);
 
     --back-primary: #121212;
     --back-secondary: #1e1e1e;
@@ -95,6 +99,8 @@
     --text-co-secondary: #e8e8e8;
     --text-link-co: #64b5f6;
     --text-link-hover-co: #90caf9;
+    --content-border-co: rgba(0, 140, 255, 0.2);
+    --content-border-strong-co: rgba(0, 140, 255, 0.4);
 
     --back-primary: #0a0e27;
     --back-secondary: #1a1f3a;
@@ -140,6 +146,8 @@
     --text-co-secondary: #4a0e4e;
     --text-link-co: #d946a6;
     --text-link-hover-co: #ec4899;
+    --content-border-co: rgba(255, 0, 191, 0.2);
+    --content-border-strong-co: rgba(255, 0, 191, 0.4);
 
     --back-primary: #fce7f3;
     --back-secondary: #fdf2f8;
@@ -185,6 +193,8 @@
     --text-co-secondary: #fafaf8;
     --text-link-co: #ff6dd8;
     --text-link-hover-co: #ff88e6;
+    --content-border-co: rgba(183, 0, 255, 0.2);
+    --content-border-strong-co: rgba(183, 0, 255, 0.4);
 
     --back-primary: #3b0d5c;
     --back-secondary: #4d1973;
@@ -230,6 +240,8 @@
     --text-co-secondary: #00ffff;
     --text-link-co: #00ff88;
     --text-link-hover-co: #00ffff;
+    --content-border-co: rgb(0, 255, 255, 0.2);
+    --content-border-strong-co: rgb(0, 255, 255, 0.4);
 
     --back-primary: #0a0015;
     --back-secondary: #150033;
@@ -275,6 +287,8 @@
     --text-co-secondary: #00dd00;
     --text-link-co: #00ff00;
     --text-link-hover-co: #00ffff;
+    --content-border-co: rgb(0, 221, 0, 0.2);
+    --content-border-strong-co: rgb(0, 221, 0, 0.4);
 
     --back-primary: #000000;
     --back-secondary: #0a0a0a;
