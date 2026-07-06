@@ -56,16 +56,32 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
         <?php endif; ?>
 
         <!-- Hero Section Dashboard -->
-        <?php if($show_hero_two): ?>
-        <div class="content">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 40px; border-radius: 12px; color: white; text-align: center; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);">
-                <h1 style="font-size: 42px; font-weight: bold; line-height: 1.2;">
-                    <?= language($section_data["name"] ?? "null") ?>
-                </h1>
+        <?php $view_hero_two = function(string $section_name = "", string $url_back = ""){ ?>
+        <div class="content" style="margin: 0;">
+            <style>
+                .boton-back {
+                    color: var(--text-co);
+                    background-color: var(--back-secondary);   
+                }
+                .boton-back:hover {
+                    color: var(--text-co);
+                    background-color: var(--back-primary);   
+                }
+            </style>
+            <div style="display: flex; justify-content: space-between; gap: 4px; border-radius: 4px; align-items: center; border: 1px solid var(--content-border-strong-co); overflow: hidden;">
+                <a class="boton-back" href="<?= $url_back ?>" style="padding: 8px 15px; border-right: 1px solid var(--content-border-strong-co); font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 16px;">
+                    ←
+                </a>
+                <div style="padding-left: 8px; padding-right: 8px; flex: 1; text-align: center;">
+                    <strong><?= language($section_name ?? "null") ?></strong>
+                </div>
+                <a class="boton-back" href="<?= route("dashboard") ?>" style="padding: 8px 15px; border-left: 1px solid var(--content-border-strong-co); font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 16px;">
+                    📊
+                </a>
             </div>
         </div>
-        <?php endif; ?>
-
+        <?php }; ?>
+        
         <!-- sección no encontrada -->
         <?php if($show_hero_not_found): ?>
         <div class="content">
@@ -95,7 +111,7 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
 
         <!-- Section view -->
         <?php if($show_view) {
-            view("components/dashboard/{$get_section}", array_merge($data_origin, ["data_origin" => $data_origin]));
+            view("components/dashboard/{$get_section}", array_merge($data_origin, ["data_origin" => $data_origin, "view_hero_two" => $view_hero_two]));
         } ?>
     </main>
 <?php view("components/footer"); ?>
