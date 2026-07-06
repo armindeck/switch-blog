@@ -270,6 +270,14 @@ switch ($view) {
                 $actions->updateBlogPost($data["blog_data"], $get_id, $model);
             }
         }
+
+        if($get_section == "settings"){
+            $data_config = read(pathFiles("config"));
+            $data["timezone"] = read(pathFiles("timezone")) ?? [];
+            
+            $actions->updateSettings($data_config);
+            $actions->updateSettingsHtaccess($data_config);
+        }
         break;
 
     default:
