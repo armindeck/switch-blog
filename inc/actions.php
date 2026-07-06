@@ -637,4 +637,189 @@ class Actions {
             redirect(route("blog") . "/" . urlencode($post_slug));
         }
     }
+
+    public function updateSettings(array $data_config): void {
+        if (isset($_POST["update_settings"])) {
+            // Sanitizar datos
+            $name = secureString($_POST["name"] ?? "");
+            $url = htmlspecialchars($_POST["url"] ?? "", ENT_QUOTES, 'UTF-8');
+            $description = secureString($_POST["description"] ?? "");
+            $timezone = secureString($_POST["timezone"] ?? "");
+            $year = secureString($_POST["year"] ?? "");
+            $language = secureString($_POST["language"] ?? "");
+            $theme = secureString($_POST["theme"] ?? "");
+            $captcha_public_key = secureString($_POST["captcha_public_key"] ?? "");
+            $captcha_private_key = secureString($_POST["captcha_private_key"] ?? "");
+
+            $data_fill = [
+                "name" => $name,
+                "url" => $url,
+                "description" => $description,
+                "timezone" => $timezone,
+                "year" => $year,
+                "language" => $language,
+                "theme" => $theme,
+                "captcha_public_key" => $captcha_public_key,
+                "captcha_private_key" => $captcha_private_key
+            ];
+
+            // Validaciones
+            if (empty($name) || empty($url) || empty($timezone) || empty($year) || empty($language) || empty($theme)) {
+                message("error", language("fill_required"));
+                $_SESSION["tmp_form"] = $data_fill;
+                redirect(route("dashboard/settings"));
+            }
+
+            if (strlen($name) < 2 || strlen($name) > 200 || 
+                strlen($url) < 10 || strlen($url) > 250 || 
+                strlen($timezone) < 2 || strlen($timezone) > 250 || 
+                strlen($year) != 4 || 
+                strlen($language) < 2 || strlen($language) > 100 ||
+                strlen($theme) < 2 || strlen($theme) > 100
+                ) {
+                message("error", language("fill_the_fields_with_the_requested_data"));
+                $_SESSION["tmp_form"] = $data_fill;
+                redirect(route("dashboard/settings"));
+            }
+
+            if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+                message("error", language("invalid_url"));
+                $_SESSION["tmp_form"] = $data_fill;
+                redirect(route("dashboard/settings"));
+            }
+
+            $captcha = ["public" => $captcha_public_key, "private" => $captcha_private_key];
+            $data_fill = array_merge($data_fill, ["captcha" => $captcha]);
+            unset($data_fill["captcha_public_key"]);
+            unset($data_fill["captcha_private_key"]);
+
+            $data = array_merge($data_config, $data_fill);
+
+            if($url != $data_config["url"] || $timezone != $data_config["timezone"]){
+                $read = file_exists(RAIZ . ".htaccess") ? file_get_contents(RAIZ . ".htaccess") ?? "" : "";
+                $modify = $read;
+                if($url != $data_config["url"]){
+                    $url_mod = rtrim($url, '/') . '/';
+                    $modify = str_replace(
+                        "RewriteRule ^(.*)$ {$data_config['url']}$1 [R=301,L]",
+                        "RewriteRule ^(.*)$ {$url_mod}$1 [R=301,L]",
+                        $read
+                    );
+                }
+                if($timezone != $data_config["timezone"]){
+                    $modify = str_replace(
+                        "php_value date.timezone \"{$data_config['timezone']}\"",
+                        "php_value date.timezone \"{$timezone}\"",
+                        $read
+                    );
+                }
+                file_put_contents(RAIZ . ".htaccess", $modify);
+            }
+            
+            // Guardar cambios
+            $confirm = write(pathFiles("config"), $data);
+            message($confirm ? "success" : "error", $confirm ? language("updated") : language("fail"));
+            redirect(route("dashboard/settings"));
+        }
+    }
+
+    public function updateSettingsHtaccess(array $data_config): void {
+        if (isset($_POST["update_settings_htaccess"])) {
+            // Sanitizar datos
+            $enable_timezone = !empty($_POST["enable_timezone"]);
+            $enable_ssl_https = !empty($_POST["enable_ssl_https"]);
+            $show_errors = !empty($_POST["show_errors"]);
+            $field_link_error = fn($id) => htmlspecialchars($_POST["error_link_{$id}"] ?? "", ENT_QUOTES, 'UTF-8');
+
+            $data_fill = [
+                "enable_timezone" => $enable_timezone,
+                "enable_ssl_https" => $enable_ssl_https,
+                "show_errors" => $show_errors,
+            ];
+
+            $url_fill = [];
+            $urls_error_links = [];
+            $number_errors = [400, 401, 403, 404, 500, 503];
+
+            foreach ($number_errors as $value) {
+                $url_fill["error_link_{$value}"] = $field_link_error($value);
+                $urls_error_links[$value] = $field_link_error($value);
+            }
+
+            foreach ($url_fill as $value) {
+                if (empty($value)){
+                    message("error", language("fill_required"));
+                    $_SESSION["tmp_form"] = array_merge($data_fill, $url_fill);
+                    redirect(route("dashboard/settings"));
+                    break;
+                }
+    
+                if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+                    message("error", language("invalid_url"));
+                    $_SESSION["tmp_form"] = array_merge($data_fill, $url_fill);;
+                    redirect(route("dashboard/settings"));
+                    break;
+                }
+            }
+
+            $data_fill["error_link"] = $urls_error_links;
+            $data = array_merge($data_config, $data_fill);
+            $file_htaccess = RAIZ . "database/htaccess.txt";
+            $url_mod = rtrim($data_config["url"], '/') . '/';
+
+            $read_htaccess = file_exists($file_htaccess) ? file_get_contents($file_htaccess) ?? "" : "";
+            $modify = $read_htaccess;
+
+            $text_replace = [
+                "show_error" => "# REPLACE_SHOW_ERROR",
+                "timezone" => "# REPLACE_TIMEZONE",
+                "redirect_https" => "# REPLACE_REDIRECT_HTTPS",
+                "error_link" => "# REPLACE_ERROR_LINK"
+            ];
+
+            $code_show_error = "php_flag display_errors On\nphp_flag display_startup_errors On\nphp_value error_reporting -1";
+            $code_timezone = "php_value date.timezone \"{$data_config['timezone']}\"";
+            $code_redirect_https = "RewriteCond %{HTTPS} !=on\nRewriteRule ^(.*)$ {$url_mod}$1 [R=301,L]";
+            $code_change_error_link =
+                "ErrorDocument 400 {$urls_error_links[400]}\n".
+                "ErrorDocument 401 {$urls_error_links[401]}\n".
+                "ErrorDocument 403 {$urls_error_links[403]}\n".
+                "ErrorDocument 404 {$urls_error_links[404]}\n".
+                "ErrorDocument 500 {$urls_error_links[500]}\n".
+                "ErrorDocument 503 {$urls_error_links[503]}";
+
+            $code_error_link_origin =
+                "ErrorDocument 400 {$data_config['error_link'][400]}\n".
+                "ErrorDocument 401 {$data_config['error_link'][401]}\n".
+                "ErrorDocument 403 {$data_config['error_link'][403]}\n".
+                "ErrorDocument 404 {$data_config['error_link'][404]}\n".
+                "ErrorDocument 500 {$data_config['error_link'][500]}\n".
+                "ErrorDocument 503 {$data_config['error_link'][503]}";
+            
+            $modify = str_replace(
+                $show_errors ? $text_replace["show_error"] : $code_show_error,
+                !$show_errors ? $text_replace["show_error"] : $code_show_error,
+                $modify);
+
+            $modify = str_replace(
+                $enable_timezone ? $text_replace["timezone"] : $code_timezone,
+                !$enable_timezone ? $text_replace["timezone"] : $code_timezone,
+                $modify);
+
+            $modify = str_replace(
+                $enable_ssl_https ? $text_replace["redirect_https"] : $code_redirect_https,
+                !$enable_ssl_https ? $text_replace["redirect_https"] : $code_redirect_https,
+                $modify);
+
+            $modify = str_replace($text_replace["error_link"], $code_change_error_link, $modify);
+            $modify = str_replace($code_error_link_origin, $code_change_error_link, $modify);
+
+            $save_htaccess = file_put_contents(RAIZ . ".htaccess", $modify);
+
+            // Guardar cambios
+            $confirm = write(pathFiles("config"), $data) && $save_htaccess;
+            message($confirm ? "success" : "error", $confirm ? language("updated") : language("fail"));
+            redirect(route("dashboard/settings"));
+        }
+    }
 }
