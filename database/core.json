@@ -4,9 +4,15 @@
     "version": "2.0.0",
     "state": "dev",
     "created": "2026-02-25",
-    "updated": "2026-07-02",
+    "updated": "2026-07-05",
     "creator_name": "Armin Deck",
     "creator_url": "https://github.com/armindeck",
     "languages": ["es", "en"],
-    "themes": ["light", "dark", "dark-aero", "pink", "fuchsia", "cyberpunk", "matrix"]
+    "themes": ["light", "dark", "dark-aero", "pink", "fuchsia", "cyberpunk", "matrix"],
+    "social": {
+        "personal": {"social_name": "Personal", "name": "dbproject", "url": "https://dbproject.rf.gd"},
+        "github": {"social_name": "GitHub", "name": "Armin Deck", "url": "https://github.com/armindeck"},
+        "facebook": {"social_name": "Facebook", "name": "Tobix64", "url": "https://facebook.com/tobix64"},
+        "youtube": {"social_name": "YouTube", "name": "Tobix64", "url": "https://youtube.com/@tobix64"}
+    }
 }
