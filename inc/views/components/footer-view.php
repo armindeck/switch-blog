@@ -27,7 +27,7 @@ SOFTWARE.
         <footer class="footer">
             <small style="float: left; opacity: 0.8;" title="<?= language("license") . " - " . language("counter") ?>">MIT - <?= read(pathFiles("counter"))["counter"] ?? 1 ?></small>
             &copy; 2026 <a href="https://github.com/armindeck" target="_blank">Armin Deck</a>.
-            <small style="float: right; opacity: 0.8;" title="<?= language(core("state")) . " - " . core("updated") ?>">v<?= core("version") ?></small>
+            <small style="float: right; opacity: 0.8;" title="<?= language("v") . core("version") . "-" . core("state") . " ~ " . core("updated") ?>">v<?= core("version") ?>-<?= core("state") ?></small>
         </footer>
     </div>
 </body>
