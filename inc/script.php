@@ -147,8 +147,8 @@ function core(string $key): array|string {
     return read(pathFiles("core"))[$key] ?? [];
 }
 
-function config(string $key): array|string {
-    return read(pathFiles("config"))[$key] ?? [];
+function config(string $key): array|string|bool|int {
+    return read(pathFiles("config"))[$key] ?? "";
 }
 
 function changeLanguage(string $language): void {
