@@ -11,7 +11,7 @@ php_value error_reporting -1
 AddDefaultCharset UTF-8
 
 # Zona horaria
-php_value date.timezone "America/Bogota"
+# REPLACE_TIMEZONE
 
 # ================================
 # Seguridad
@@ -34,6 +34,7 @@ Options -Indexes
 # Sistema de rutas
 # ================================
 RewriteEngine On
+# REPLACE_REDIRECT_HTTPS
 
 # Permitir acceso directo a /assets
 RewriteCond %{REQUEST_URI} ^/(assets)/ [NC]
@@ -47,9 +48,9 @@ RewriteRule ^(.*)$ index.php?slug=$1 [L,QSA]
 # ================================
 # Errores personalizados
 # ================================
-ErrorDocument 400 /switch/index.php?slug=error/400
-ErrorDocument 401 /switch/index.php?slug=error/401
-ErrorDocument 403 /switch/index.php?slug=error/403
-ErrorDocument 404 /switch/index.php?slug=error/404
-ErrorDocument 500 /switch/index.php?slug=error/500
-ErrorDocument 503 /switch/index.php?slug=error/503
+ErrorDocument 400 http://localhost/switch-blog/error?type=400
+ErrorDocument 401 http://localhost/switch-blog/error?type=401
+ErrorDocument 403 http://localhost/switch-blog/error?type=403
+ErrorDocument 404 http://localhost/switch-blog/error?type=404
+ErrorDocument 500 http://localhost/switch-blog/error?type=500
+ErrorDocument 503 http://localhost/switch-blog/error?type=503
