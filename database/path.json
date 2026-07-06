@@ -15,5 +15,6 @@
     "counter": "database/counter.json",
     "users": "database/users.json",
     "blog": "database/blog.json",
-    "dashboard": "database/dashboard.json"
+    "dashboard": "database/dashboard.json",
+    "timezone": "database/timezone.json"
 }
