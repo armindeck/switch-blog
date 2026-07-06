@@ -58,7 +58,7 @@ $total_posts = count($published_posts);
                         $post_slug = $post["slug"] ?? "";
                     ?>
                         <a href="<?= route("blog") ?>/<?= urlencode($post_slug) ?>" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
-                            <div style="background: var(--back-secondary); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column; height: 100%; border: 1px solid rgba(100, 181, 246, 0.2); hover: transform 0.3s ease;">
+                            <div style="background: var(--back-secondary); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column; height: 100%; border: 1px solid var(--content-border-strong-co); hover: transform 0.3s ease;">
                                 <!-- Image -->
                                 <div style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--button-bg) 0%, var(--button-hover-bg) 100%); overflow: hidden; position: relative;">
                                     <?php if(!empty($post["image"])): ?>
