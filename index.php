@@ -23,7 +23,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-session_start();
+session_start([
+    "cookie_secure" => true, // Solo HTTPS
+    "cookie_httponly" => true, // No accesible desde JS
+    "cookie_samesite" => "lax", // Protección CSRF
+    "use_strict_mode" => true // Evita session fixation
+]);
+
 require_once __DIR__ . "/inc/script.php"; // Scripts
 require_once __DIR__ . "/inc/model.php"; // Model
 require_once __DIR__ . "/inc/captcha.php"; // Captcha
@@ -39,6 +45,7 @@ define("RAIZ", __DIR__ . "/");
 changeLanguage($_GET["config"] ?? ""); // Change Language
 changeTheme($_GET["config"] ?? ""); // Change Theme
 $model = new model;
-date_default_timezone_set("America/Bogota");
+if(config("enable_timezone") === true){ date_default_timezone_set(config("timezone")); }
+error_reporting(config("show_errors") === true ? E_ALL : 0);
 
 require_once __DIR__ . '/inc/web.php';
