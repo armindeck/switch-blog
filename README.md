@@ -1,43 +1,69 @@
-# Switch
-Aplicación web PHP moderna y versátil para gestionar múltiples aspectos de tu vida digital. Switch permite administrar una colección de contenido multimedia (anime, películas, series, etc.), mantener un diario personal, gestionar objetivos, crear notas y conectar con una comunidad. Con soporte multiidioma, múltiples temas visuales y autenticación de usuarios, ofrece una experiencia personalizable y completa.
+# Switch Blog
+Switch Blog es una plataforma web hecha en PHP orientada a la publicación de artículos y contenido editorial. Está pensada como un blog moderno con un panel de administración para crear publicaciones, gestionar borradores, personalizar la apariencia y administrar la configuración del sitio.
 
-![Preview Anipelis](./preview.png)
+![Preview](./preview.png)
 
-## 🚀 Características principales  
-- **Gestión de contenido multimedia** - Agregar, modificar y eliminar anime, películas, OVAs y otros tipos de contenido
-- **Autenticación de usuarios** - Sistema de registro e inicio de sesión seguro
-- **Cuentas personalizadas** - Cada usuario puede crear su propio listado personalizado
-- **Soporte multiidioma** - Interfaz disponible en español e inglés
-- **Múltiples temas visuales** - Cambio dinámico de temas incluyendo temas oscuros y especiales (Cyberpunk, Matrix, etc.)
-- **Sistema de notas y diario** - Crear y gestionar notas personales con registro por fecha
-- **Gestión de objetivos** - Crear y seguimiento de metas y tareas
-- **Registro de cumpleaños** - Base de datos de fechas especiales
-- **Comunidad** - Sección para interactuar con otros usuarios
-- **Interfaz responsiva** - Compatible con dispositivos móviles y de escritorio
-- **Almacenamiento en JSON** - Configuración y datos almacenados en archivos JSON
+## 🚀 ¿Qué es este proyecto?
+Switch Blog nace como una base para un sitio de blog personal o editorial, con enfoque en:
+- publicar artículos con estructura clara,
+- mostrar contenido en formato web moderno,
+- ofrecer un dashboard para administrar el sitio,
+- y extender la plataforma con nuevas funciones en el futuro.
 
-## 📑 Secciones disponibles
-- **Inicio** (Home) - Página principal
-- **Login** - Iniciar sesión
-- **Registro** - Crear nueva cuenta
-- **Olvide la contraseña** - Recuperar cuenta por pin
-- **Perfil** - Información del usuario
-- **Configuración** - Modificar la información del usuario
-- **AniPelis** - Listado de animes, peliculas, series
-- **Diario** - Notas personales por fecha
-- **Notas** - Listado de notas
-- **Objetivos** - Gestión de metas y tareas
-- **Cumpleaños** - Registro de fechas de nacimiento
-- **Comunidad** - Sección de comunidad
+## ✨ Características principales
+- Publicación de artículos con título, resumen, categoría, imagen y contenido
+- Soporte para Markdown en el contenido de los posts
+- Gestión de artículos publicados y borradores
+- Sistema de usuarios con registro, inicio de sesión, recuperación de contraseña y perfil
+- Sistema de likes en publicaciones
+- Dashboard para crear, editar y administrar artículos
+- Configuración general del sitio, idioma, tema y zona horaria
+- Integración con hCaptcha para proteger formularios
+- Almacenamiento de datos en archivos JSON
+- Soporte multiidioma y múltiples temas visuales
 
-## ⚙ Configurar hCaptcha
-- Agregar la clave secreta y publica en [config.json](./database/config.json)
+## 🧠 Panel de administración
+El dashboard está pensado para convertirse en el centro de control del blog. Actualmente incluye:
+- creación y edición de artículos,
+- gestión de borradores,
+- configuración básica del sitio desde la interfaz,
+- configuración de hCaptcha y SSL,
+- y administración del perfil del usuario.
+
+> La configuración general del sitio puede gestionarse desde el panel administrativo, sin necesidad de editar manualmente el archivo [database/config.json](./database/config.json).
+
+### Próximamente / en desarrollo
+- subida de archivos e imágenes,
+- gestión avanzada de usuarios,
+- administración de anuncios,
+- y más herramientas de control para el blog.
+
+## 📑 Secciones principales
+- Inicio
+- Blog
+- Dashboard
+- Perfil
+- Configuración
+- Login / Registro / Recuperación de cuenta
+
+## ⚙ Requisitos
+- PHP 8 o superior
+- Apache con mod_rewrite habilitado
+- XAMPP, LAMPP u otro entorno web compatible
+
+## 🛠 Instalación
+1. Copia el proyecto en la carpeta pública de tu servidor.
+2. Asegúrate de que la carpeta tenga permisos de escritura para los archivos JSON.
+3. Configura el sitio para usar [index.php](./index.php) como punto de entrada.
+4. Ajusta la configuración básica desde el panel administrativo o, si lo prefieres, edita manualmente [database/config.json](./database/config.json).
+5. Si usas URLs amigables, activa el módulo Rewrite de Apache.
+
+## 🔐 Configurar hCaptcha
+Puedes agregar la clave pública y privada desde el panel administrativo o editando manualmente [database/config.json](./database/config.json).
 
 ## 🎲 Créditos y dependencias
-
 Este proyecto utiliza [PHP Markdown Lib](https://github.com/michelf/php-markdown)
 (c) 2004–2022 Michel Fortin — Licencia BSD (basada en Markdown por John Gruber).
 
-
-## 🌐 Información adicional  
+## 🌐 Información adicional
 🔗 Página oficial: [dbproject.rf.gd](https://dbproject.rf.gd)  
