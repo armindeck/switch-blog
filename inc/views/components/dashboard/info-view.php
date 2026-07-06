@@ -26,42 +26,41 @@ SOFTWARE.
 use Michelf\Markdown;
 use Michelf\MarkdownExtra;
 
-?>
-<div class="content">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px">
-        <a href="../dashboard" style="background: var(--back-primary); color: var(--text-co); padding: 6px 12px; border: 1px solid var(--input-border-co); border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 16px;">
-            ← <?= language("back") ?>
-        </a>
-    </div>
+echo $view_hero_two(
+    language($get_section),
+    route("dashboard")
+);
 
+?>
+<div class="content" style="margin: 0;">
     <!-- About me -->
-    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; margin: 4px 0px 6px 0px;">
+    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--content-border-strong-co); border-radius: 4px; margin: 0px 0px 6px 0px;">
         <!-- Title -->
-        <div style="padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.2);">
+        <div style="padding: 4px 8px; border-bottom: 1px solid var(--content-border-strong-co);">
             <strong><?= language("about_me") ?></strong>
         </div>
         <!-- Items -->
         <div style="padding: 4px 8px;">
-            <small>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Possimus reiciendis ea nulla voluptatibus sequi, eos rerum quia, repellendus dolore ex sed blanditiis similique officiis cumque exercitationem aliquid perspiciatis consequatur necessitatibus.</small>
+            <small><?= language("switch_blog_info") ?></small>
         </div>
     </div>
     
     <!-- Core -->
-    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; margin: 4px 0px 6px 0px;">
+    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--content-border-strong-co); border-radius: 4px; margin: 4px 0px 6px 0px;">
         <!-- Title -->
-        <div style="padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.2);">
+        <div style="padding: 4px 8px; border-bottom: 1px solid var(--content-border-strong-co);">
             <strong><?= language("core") ?></strong>
         </div>
         <!-- Items -->
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.1);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--content-border-co);">
             <small><?= language("creator") ?>:</small>
             <small><a href="<?= core("creator_url") ?>" target="_blank"><?= core("creator_name") ?></a></small>
         </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.1);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--content-border-co);">
             <small><?= language("name") ?>:</small>
             <small><a href="<?= core("url") ?>" target="_blank"><?= core("name") ?></a></small>
         </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.1);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--content-border-co);">
             <small><?= language("version") ?>:</small>
             <small><?= core("version") . "-" . core("state") ?></small>
         </div>
@@ -72,34 +71,24 @@ use Michelf\MarkdownExtra;
     </div>
     
     <!-- Social -->
-    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; margin: 4px 0px 6px 0px;">
+    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--content-border-strong-co); border-radius: 4px; margin: 4px 0px 6px 0px;">
         <!-- Title -->
-        <div style="padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.2);">
+        <div style="padding: 4px 8px; border-bottom: 1px solid var(--content-border-strong-co);">
             <strong><?= language("social_networks") ?></strong>
         </div>
         <!-- Items -->
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.1);">
-            <small><?= language("personal") ?>:</small>
-            <small><a href="https://dbproject.rf.gd" target="_blank">dbproject</a></small>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.1);">
-            <small>GitHub:</small>
-            <small><a href="<?= core("creator_url") ?>" target="_blank"><?= core("creator_name") ?></a></small>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.1);">
-            <small>Facebook:</small>
-            <small><a href="https://facebook.com/tobix64" target="_blank">Tobix64</a></small>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px;">
-            <small>YouTube:</small>
-            <small><a href="https://youtube.com/@tobix64" target="_blank">Tobix64</a></small>
-        </div>
+         <?php foreach(core("social") ?? [] as $social) { ?>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--content-border-co);">
+                <small><?= $social["social_name"] ?>:</small>
+                <small><a href="<?= $social["url"] ?>" target="_blank"><?= $social["name"] ?></a></small>
+            </div>
+        <?php } ?>
     </div>
     
     <!-- License -->
-    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; margin: 4px 0px;">
+    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--content-border-strong-co); border-radius: 4px; margin: 4px 0px;">
         <!-- Title -->
-        <div style="padding: 4px 8px; border-bottom: 1px solid rgba(0,0,0,.2);">
+        <div style="padding: 4px 8px; border-bottom: 1px solid var(--content-border-strong-co);">
             <strong><?= language("license") ?></strong>
         </div>
         <!-- Items -->
@@ -109,7 +98,22 @@ use Michelf\MarkdownExtra;
             ?>
         </div>
     </div>
-    <div style="margin-top: 16px; text-align: center;">
+    
+    <!-- Changelog -->
+    <div style="display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--content-border-strong-co); border-radius: 4px; margin: 4px 0px;">
+        <!-- Title -->
+        <div style="padding: 4px 8px; border-bottom: 1px solid var(--content-border-strong-co);">
+            <strong><?= language("changelog") ?></strong>
+        </div>
+        <!-- Items -->
+        <div style="font-size: small; color: var(--text-co); padding: 4px 8px;">
+            <?php 
+                echo MarkdownExtra::defaultTransform(file_exists(RAIZ . "CHANGELOG.md") ? htmlspecialchars(file_get_contents(RAIZ . "CHANGELOG.md") ?? "") : "");
+            ?>
+        </div>
+    </div>
+
+    <div style="margin: 25px 0px; text-align: center;">
         <small>&copy; 2026 <?= core("creator_name") ?></small>
     </div>
 </div>
