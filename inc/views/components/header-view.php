@@ -30,7 +30,7 @@ SOFTWARE.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?= config("app_name") ?? core("name") ?></title>
+    <title><?= config("name") ?? core("name") ?></title>
     <meta name="description" content="Listado de animes, peliculas, series">
     <style type="text/css">
         <?= file_exists(RAIZ . "style.css") ? file_get_contents(RAIZ . "style.css") : "" ?>
@@ -57,7 +57,7 @@ SOFTWARE.
     <div class="app">
         <header class="header">
             <div>
-                <h2 class="gradient-text"><?= config("app_name") ?? core("name") ?></h2>
+                <h2 class="gradient-text"><?= config("name") ?? core("name") ?></h2>
             </div>
             <nav>
                 <a href="<?= route() ?>">🏠 <?= language("home") ?></a>
