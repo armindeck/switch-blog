@@ -1,11 +1,23 @@
 {
-    "app_name": "Switch-blog",
-    "app_url": "http:\/\/localhost\/switch-blog",
-    "language": "es",
+    "name": "Switch",
+    "url": "https:\/\/localhost\/switch-blog\/",
+    "year": "2026",
+    "language": "en",
     "theme": "dark-aero",
+    "timezone": "America\/Bogota",
+    "enable_ssl_https": false,
+    "show_errors": true,
+    "error_link": {
+        "400": "http:\/\/localhost\/switch-blog\/error?type=400",
+        "401": "http:\/\/localhost\/switch-blog\/error?type=401",
+        "403": "http:\/\/localhost\/switch-blog\/error?type=403",
+        "404": "http:\/\/localhost\/switch-blog\/error?type=404",
+        "500": "http:\/\/localhost\/switch-blog\/error?type=500",
+        "503": "http:\/\/localhost\/switch-blog\/error?type=503"
+    },
     "captcha": {
-        "private": "",
-        "public": ""
+        "public": "",
+        "private": ""
     },
     "social": {
         "twitter": "https:\/\/twitter.com\/yourprofile",
@@ -13,5 +25,7 @@
         "linkedin": "https:\/\/linkedin.com\/in\/yourprofile",
         "github": "https:\/\/github.com\/yourprofile",
         "youtube": "https:\/\/youtube.com\/@yourchannel"
-    }
+    },
+    "description": "",
+    "enable_timezone": false
 }
