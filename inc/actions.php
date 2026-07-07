@@ -822,4 +822,120 @@ class Actions {
             redirect(route("dashboard/settings"));
         }
     }
+
+    public function updateScripts(array $data_config): void {
+        if (isset($_POST["update_scripts"])) {
+            // Sanitizar datos
+            $scr_google = trim($_POST["scr_google"] ?? "");
+            $scr_important = trim($_POST["scr_important"] ?? "");
+            $scr_other = trim($_POST["scr_other"] ?? "");
+            $enable_google_scripts = !empty($_POST["enable_google_scripts"] ?? "");
+            $enable_important_scripts = !empty($_POST["enable_important_scripts"] ?? "");
+            $enable_other_scripts = !empty($_POST["enable_other_scripts"] ?? "");
+
+            $data_config["scripts"] = [
+                "google" => ["enable" => $enable_google_scripts, "script" => $scr_google],
+                "important" => ["enable" => $enable_important_scripts, "script" => $scr_important],
+                "other" => ["enable" => $enable_other_scripts, "script" => $scr_other],
+            ];
+            
+            // Guardar cambios
+            $confirm = write(pathFiles("config"), $data_config);
+            message($confirm ? "success" : "error", $confirm ? language("updated") : language("fail"));
+            redirect(route("dashboard/scripts"));
+        }
+    }
+
+    public function updateAds(array $data_config): void {
+        if (isset($_POST["update_ads"])) {
+            // Sanitizar datos
+            $content_moving_message = secureString($_POST["content_moving_message"] ?? "");
+            $url_moving_message = trim($_POST["url_moving_message"] ?? "");
+                $url_moving_message = filter_var($url_moving_message, FILTER_VALIDATE_URL) === false ? "" : $url_moving_message;
+            $new_tab_moving_message = !empty($_POST["new_tab_moving_message"] ?? "");
+            $enable_moving_message = !empty($_POST["enable_moving_message"] ?? "");
+
+            $url_banner_image = trim($_POST["url_banner_image"] ?? "");
+                $url_banner_image = filter_var($url_banner_image, FILTER_VALIDATE_URL) === false ? "" : $url_banner_image;
+            $url_banner_link = trim($_POST["url_banner_link"] ?? "");
+                $url_banner_link = filter_var($url_banner_link, FILTER_VALIDATE_URL) === false ? "" : $url_banner_link;
+            $new_tab_banner = !empty($_POST["new_tab_banner"] ?? "");
+            $enable_banner = !empty($_POST["enable_banner"] ?? "");
+
+            $data_config["ads"] = [
+                "moving" => [
+                    "enable" => $enable_moving_message,
+                    "content" => $content_moving_message,
+                    "url" => $url_moving_message,
+                    "new_tab" => $new_tab_moving_message,
+                ],
+                "banner" => [
+                    "enable" => $enable_banner,
+                    "image" => $url_banner_image,
+                    "url" => $url_banner_link,
+                    "new_tab" => $new_tab_banner,
+                ]
+            ];
+            
+            // Guardar cambios
+            $confirm = write(pathFiles("config"), $data_config);
+            message($confirm ? "success" : "error", $confirm ? language("updated") : language("fail"));
+            redirect(route("dashboard/ads"));
+        }
+    }
+
+    public function updateSocial(array $data_config): void {
+        if (isset($_POST["update_social"])) {
+            // Procesar las redes sociales enviadas desde el formulario dinámico
+            $social_ids = $_POST["social_id"] ?? [];
+            $social_emojis = $_POST["social_emoji"] ?? [];
+            $social_names = $_POST["social_name"] ?? [];
+            $show_social_cta = !empty($_POST["show_social_cta"] ?? "");
+            $social_colors = $_POST["social_color"] ?? [];
+            $social_text_colors = $_POST["social_text_color"] ?? [];
+            $social_labels = $_POST["social_label"] ?? [];
+            $social_button_texts = $_POST["social_button_text"] ?? [];
+            $social_button_emojis = $_POST["social_button_emoji"] ?? [];
+            $social_urls = $_POST["social_url"] ?? [];
+
+            $social_networks = [];
+
+            // Construir el array de redes sociales
+            foreach ($social_ids as $index => $id) {
+                $id = secureString($id ?? "");
+                
+                if (empty($id)) {
+                    continue; // Saltar si no hay ID
+                }
+
+                // Validar URL si no está vacía
+                $url = trim($social_urls[$index] ?? "");
+                if (!empty($url) && filter_var($url, FILTER_VALIDATE_URL) === false) {
+                    message("error", language("error"));
+                    redirect(route("dashboard/social"));
+                    return;
+                }
+
+                $social_networks[$id] = [
+                    "emoji" => secureString($social_emojis[$index] ?? ""),
+                    "name" => secureString($social_names[$index] ?? ""),
+                    "color" => secureString($social_colors[$index] ?? ""),
+                    "text_color" => secureString($social_text_colors[$index] ?? ""),
+                    "label" => secureString($social_labels[$index] ?? ""),
+                    "button_text" => secureString($social_button_texts[$index] ?? ""),
+                    "button_emoji" => secureString($social_button_emojis[$index] ?? ""),
+                    "url" => $url
+                ];
+            }
+
+            // Actualizar configuración con redes sociales válidas
+            $data_config["social"] = $social_networks;
+            $data_config["show_social_cta"] = $show_social_cta;
+            
+            // Guardar cambios
+            $confirm = write(pathFiles("config"), $data_config);
+            message($confirm ? "success" : "error", $confirm ? language("updated") : language("fail"));
+            redirect(route("dashboard/social"));
+        }
+    }
 }
