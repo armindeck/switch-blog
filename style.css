@@ -968,6 +968,21 @@ p {
     padding: 8px 12px;
     text-align: center;
     cursor: pointer;
+    position: relative;
+}
+
+.message .message-close {
+    position: absolute;
+    right: 14px;
+    font-size: 18px;
+    line-height: 1;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+}
+
+.message:hover .message-close {
+    opacity: 1;
+    transform: scale(1.2);
 }
 
 .message.success {
