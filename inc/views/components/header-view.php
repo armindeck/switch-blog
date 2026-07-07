@@ -35,7 +35,7 @@ SOFTWARE.
     <style type="text/css">
         <?= file_exists(RAIZ . "style.css") ? file_get_contents(RAIZ . "style.css") : "" ?>
     </style>
-	<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <?php foreach (["google", "important", "other"] as $value) { echo config("scripts")[$value]["enable"] ?? false === true && !empty(config("scripts")[$value]["script"]) ? config("scripts")[$value]["script"] . "\n" : ""; } ?>
 </head>
 <?php 
     $currentTheme = $_SESSION["theme"] ?? (!empty(config("theme")) ? config("theme") : "light");
@@ -81,5 +81,24 @@ SOFTWARE.
                 <?php if($auth && isset($view) && $view == "profile"): ?>
                     <a href="<?= route("logout") ?>">🚪 <?= language("logout") ?></a>
                 <?php endif ?>
+                <?php if($auth): ?>
+                    <a href="<?= route("dashboard") ?>">📊 <?= language("dashboard") ?></a>
+                <?php endif ?>
             </nav>
         </header>
+        <?php if((!isset($view) || !in_array($view, ["dashboard", "profile", "login", "register", "forgot-password", "community", "settings"]))): ?>
+            <?php if((config("ads")["moving"]["enable"] ?? false) == true): ?>
+                <!-- Mensaje en movimiento -->
+                <a href="<?= config("ads")["moving"]["url"] ?? "" ?>" <?= config("ads")["moving"]["new_tab"] ?? false ? "target=\"_blank\"" : "" ?> class="ads-move" style="display: flex; align-items: center; padding: 6px; font-weight: bold; border-top: 1px solid var(--content-border-strong-co); border-bottom: 1px solid var(--content-border-strong-co);">
+                    <marquee direction="left" scrollamount="10" scrolldelay="145">
+                        <?= config("ads")["moving"]["content"] ?? "" ?>
+                    </marquee>
+                </a>
+            <?php endif; ?>
+            <?php if((config("ads")["banner"]["enable"] ?? false) == true): ?>
+                <!-- Banner de anuncio -->
+                <a href="<?= config("ads")["banner"]["url"] ?? "" ?>" <?= config("ads")["banner"]["new_tab"] ?? false ? "target=\"_blank\"" : "" ?> class="ads-banner">
+                    <img src="<?= config("ads")["banner"]["image"] ?? "" ?>" alt="<?= language("ads") ?>" style="width: 100%; height: auto;">
+                </a>
+            <?php endif; ?>
+        <?php endif; ?>
