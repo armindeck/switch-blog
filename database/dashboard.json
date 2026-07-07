@@ -21,6 +21,13 @@
             "co": "#f44336",
             "bg": "rgba(244, 67, 54, 0.15) 0%, rgba(229, 57, 53, 0.15)"
         },
+        "social": {
+            "id": "social",
+            "name": "social_networks",
+            "icon": "📱",
+            "co": "#e91e63",
+            "bg": "rgba(233, 30, 99, 0.15) 0%, rgba(194, 24, 91, 0.15)"
+        },
         "ads": {
             "id": "ads",
             "name": "ads",
