@@ -46,6 +46,7 @@ else {
 switch ($view) {
     case "home":
         $data = [
+            "view" => $view,
             "auth" => $model->auth(),
             "all_users" => $model->allUser(),
             "user_auth" => $_SESSION["user"] ?? null,
@@ -81,6 +82,7 @@ switch ($view) {
         }
         
         $data = [
+            "view" => $view,
             "auth" => $model->auth(),
             "post" => $post,
             "post_slug" => $post_slug,
@@ -207,19 +209,19 @@ switch ($view) {
 
     case "login":
         if($model->auth()){ redirect(route()); }
-        $data = ["model" => $model];
+        $data = ["model" => $model, "view" => $view];
         $actions->login(new inc\Captcha, $model);
         break;
 
     case "register":
         if($model->auth()){ redirect(route()); }
-        $data = ["model" => $model];
+        $data = ["model" => $model, "view" => $view];
         $actions->register(new inc\Captcha, $model);
         break;
         
     case "forgot-password":
         if($model->auth()){ redirect(route()); }
-        $data = ["model" => $model];
+        $data = ["model" => $model, "view" => $view];
         $actions->forgotPassword(new inc\Captcha, $model);
         break;
         
@@ -240,7 +242,7 @@ switch ($view) {
         break;
 
     case "community":
-        $data = ["auth" => $model->auth(), "users" => $model->allUser()];
+        $data = ["auth" => $model->auth(), "users" => $model->allUser(), "view" => $view];
         break;
 
     case "dashboard":
@@ -251,6 +253,7 @@ switch ($view) {
         $get_id = $view_explode[3] ?? "";
 
         $data = [
+            "view" => $view,
             "user" => $_SESSION["user"] ?? null,
             "user_auth" => $model->auth(),
             "get_section" => $get_section,
@@ -278,6 +281,21 @@ switch ($view) {
             $actions->updateSettings($data_config);
             $actions->updateSettingsHtaccess($data_config);
         }
+
+        if($get_section == "scripts"){
+            $data_config = read(pathFiles("config"));
+            $actions->updateScripts($data_config);
+        }
+
+        if($get_section == "ads"){
+            $data_config = read(pathFiles("config"));
+            $actions->updateAds($data_config);
+        }
+
+        if($get_section == "social"){
+            $data_config = read(pathFiles("config"));
+            $actions->updateSocial($data_config);
+        }
         break;
 
     default:
@@ -286,8 +304,6 @@ switch ($view) {
         break;
 }
 
-$data["data_origin"] = $data;
-
 counter($view);
-view("layout/$view", $data ?? []);
+view("layout/$view", array_merge($data ?? [], ["data_origin" => $data ?? []]));
 unset($_SESSION["tmp_form"]);
