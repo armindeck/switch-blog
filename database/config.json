@@ -19,13 +19,87 @@
         "public": "",
         "private": ""
     },
+    "show_social_cta": true,
     "social": {
-        "twitter": "https:\/\/twitter.com\/yourprofile",
-        "facebook": "https:\/\/facebook.com\/yourprofile",
-        "linkedin": "https:\/\/linkedin.com\/in\/yourprofile",
-        "github": "https:\/\/github.com\/yourprofile",
-        "youtube": "https:\/\/youtube.com\/@yourchannel"
+        "youtube": {
+            "emoji": "▶️",
+            "name": "YouTube",
+            "color": "var(--error-bg)",
+            "text_color": "var(--error-co)",
+            "label": "subscribe_youtube",
+            "button_text": "subscribe",
+            "button_emoji": "🔔",
+            "url": "https:\/\/youtube.com\/@tobix64"
+        },
+        "facebook": {
+            "emoji": "👍",
+            "name": "Facebook",
+            "color": "var(--button-bg)",
+            "text_color": "white",
+            "label": "follow_facebook",
+            "button_text": "follow",
+            "button_emoji": "👍",
+            "url": "https:\/\/facebook.com\/tobix64"
+        },
+        "twitter": {
+            "emoji": "𝕏",
+            "name": "Twitter",
+            "color": "#000000",
+            "text_color": "white",
+            "label": "follow_twitter",
+            "button_text": "follow",
+            "button_emoji": "𝕏",
+            "url": "https:\/\/twitter.com\/armindeck"
+        },
+        "linkedin": {
+            "emoji": "💼",
+            "name": "LinkedIn",
+            "color": "#0077b5",
+            "text_color": "white",
+            "label": "follow_linkedin",
+            "button_text": "follow",
+            "button_emoji": "💼",
+            "url": ""
+        },
+        "github": {
+            "emoji": "🐙",
+            "name": "GitHub",
+            "color": "#333333",
+            "text_color": "white",
+            "label": "follow_github",
+            "button_text": "follow",
+            "button_emoji": "🐙",
+            "url": "https:\/\/github.com\/armindeck"
+        }
     },
     "description": "",
-    "enable_timezone": false
+    "enable_timezone": false,
+    "scripts": {
+        "google": {
+            "enable": false,
+            "script": ""
+        },
+        "important": {
+            "enable": true,
+            "script": "<!-- Captcha -->\r\n<script src=\"https:\/\/js.hcaptcha.com\/1\/api.js\" async defer><\/script>"
+        },
+        "other": {
+            "enable": true,
+            "script": "<meta property=\"og:locale\" content=\"es_CO\" \/>\r\n<meta name=\"facebook:site\" content=\"@tobix64\" \/>\r\n<meta name=\"twitter:site\" content=\"@armindeck\" \/>\r\n<meta name=\"youtube:site\" content=\"@tobix64\" \/>\r\n<meta name=\"github:site\" content=\"@armindeck\" \/>"
+        }
+    },
+    "ads": {
+        "moving": {
+            "enable": true,
+            "content": "🎁 Se encuentra disponible la versión 2.0.0-dev de switch-blog y viene con nuevas mejoras! ✅",
+            "url": "https:\/\/dbproject.rf.gd",
+            "new_tab": true
+        },
+        "banner": {
+            "enable": true,
+            "image": "https:\/\/dbproject.rf.gd\/assets\/img\/anuncio.png",
+            "url": "https:\/\/dbproject.rf.gd",
+            "new_tab": true
+        }
+    }
 }
