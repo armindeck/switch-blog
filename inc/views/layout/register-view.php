@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-view("components/header", ["auth" => $model->auth()]);
+view("components/header", ["auth" => $model->auth(), "view" => $view]);
 ?>
     <main class="main">
         <?php view("components/message"); ?>

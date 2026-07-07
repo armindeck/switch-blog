@@ -26,7 +26,7 @@ SOFTWARE.
 use Michelf\Markdown;
 use Michelf\MarkdownExtra;
 
-view("components/header", ["auth" => $auth]);
+view("components/header", ["auth" => $auth, "view" => $view]);
 ?>
     <main class="main">
         <?php view("components/message"); ?>

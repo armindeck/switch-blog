@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-view("components/header", ["auth" => $auth]);
+view("components/header", ["auth" => $auth, "view" => $view]);
 
 // Get authentication and user data
 $user = $_SESSION["user"] ?? null;
