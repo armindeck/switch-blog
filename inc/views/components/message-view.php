@@ -26,6 +26,7 @@ SOFTWARE.
 if (isset($_SESSION["message"])): ?>
     <input type="checkbox" id="hidden_message" class="hidden_message" hidden>
     <label for="hidden_message" class="message <?= $_SESSION["message"]["type"] ?? "" ?>">
-        <?= $_SESSION["message"]["content"] ?? "" ?>
+        <span class="message-content"><?= $_SESSION["message"]["content"] ?? "" ?></span>
+        <span class="message-close" aria-hidden="true">&times;</span>
     </label>
 <?php endif; unset($_SESSION["message"]); ?>
