@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-view("components/header", ["auth" => $user_auth]);
+view("components/header", ["auth" => $user_auth, "view" => $view]);
 
 $sections = $dashboard_data["sections"] ?? [];
 $section_data = $sections[$get_section] ?? [];
@@ -41,8 +41,8 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
     <main class="main">
         <?php view("components/message"); ?>
 
-        <!-- Hero Dashboard -->
         <?php if($show_hero): ?>
+        <!-- Hero Dashboard -->
         <div class="content">
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 50px 40px; border-radius: 12px; color: white; text-align: center; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);">
                 <h1 style="margin: 0 0 15px 0; font-size: 42px; font-weight: bold; line-height: 1.2;">
@@ -55,8 +55,8 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
         </div>
         <?php endif; ?>
 
-        <!-- Hero Section Dashboard -->
         <?php $view_hero_two = function(string $section_name = "", string $url_back = ""){ ?>
+        <!-- Hero Section Dashboard -->
         <div class="content" style="margin: 0;">
             <style>
                 .boton-back {
@@ -82,8 +82,8 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
         </div>
         <?php }; ?>
         
-        <!-- sección no encontrada -->
         <?php if($show_hero_not_found): ?>
+        <!-- sección no encontrada -->
         <div class="content">
             <div style="background: #f8d7da; padding: 25px; border-radius: 10px; text-align: center;">
                 <h2 style="margin: 0 0 10px 0; font-size: 24px; color: #721c24;">404 - <?= language("section_not_found") ?></h2>
@@ -92,8 +92,8 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
         </div>
         <?php endif; ?>
 
-        <!-- Sections cards -->
         <?php if($show_sections): ?>
+        <!-- Sections cards -->
         <div class="content">
             <h2 style="margin-bottom: 25px; font-size: 24px;"><?= language("sections") ?></h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 30px;">
@@ -109,9 +109,9 @@ $dir = get_slug() == "dashboard/" ? "../" : path_directory();
         </div>
         <?php endif; ?>
 
-        <!-- Section view -->
-        <?php if($show_view) {
-            view("components/dashboard/{$get_section}", array_merge($data_origin, ["data_origin" => $data_origin, "view_hero_two" => $view_hero_two]));
-        } ?>
+        <?php if($show_view): ?>
+            <!-- Section view -->
+            <?php view("components/dashboard/{$get_section}", array_merge($data_origin, ["data_origin" => $data_origin, "view_hero_two" => $view_hero_two])); ?>
+        <?php endif; ?>
     </main>
 <?php view("components/footer"); ?>
