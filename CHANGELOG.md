@@ -4,10 +4,17 @@
 
 Esta es una variante que sera exclusivamente para blogs.
 
+- Ahora aparece el boton de dashboard en el menu superior
+- Agregue una nueva sección de Redes sociales al dashboard, se pueden agregar con los datos correspondiente, ademas se puede mostrar la sección o no de CTA en la pagina
+- La sección se Anuncios en el dashboard ya es funcional
+- Agregue el anuncio de mensaje en movimiento y el banner
+- Agregue un simbolo **X** en el mensaje de alerta
+- Agregue la sección de scripts en el dashboard `Funciona`
+    - Los scripts pueden ser habilitados o no y apareceran dentro de la etiqueta `head`
 - Agregue la sección de configuración en el dashboard y funciona bien
 - Mejore los colores de los bordes
 - Mejore el diseño de la sección **posts/articulos** en el panel administrativo.
-- Agregue la sección de información en el panel administrativo `Desarrollo`
+- Agregue la sección de información en el panel administrativo `Funciona`
 - Ahora en los articulos aparecera un enlace para editarlo.
 - Agregue la vista el dashboard y sus secciones
 - Cambie la entrada princial, ahora apareceran las publicaciones, (Nuevo post) y redes sociales
