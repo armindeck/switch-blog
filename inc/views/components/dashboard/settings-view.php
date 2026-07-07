@@ -23,9 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-use Michelf\Markdown;
-use Michelf\MarkdownExtra;
-
 echo $view_hero_two(
     language($get_section),
     route("dashboard")
