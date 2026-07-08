@@ -1,4 +1,7 @@
 {
+    "upload_images": {"es": "Subir imágenes", "en": "Upload images"},
+    "upload": {"es": "Subir", "en": "Upload"},
+    "allowed_image_types": {"es": "Solo se permiten imágenes (jpg, jpeg, png, gif, webp, svg)", "en": "Only images are allowed (jpg, jpeg, png, gif, webp, svg)"},
     "add_social_network": {"es": "Agregar Red Social", "en": "Add Social Network"},
     "social": {"es": "Redes sociales", "en": "Social networks"},
     "id": {"es": "ID", "en": "ID"},
@@ -87,6 +90,14 @@
     "section_not_found_text": {"es": "Lo sentimos, la sección que buscas no existe o ha sido eliminada.", "en": "Sorry, the section you are looking for does not exist or has been deleted."},
     "posts": {"es": "Artículos", "en": "Posts"},
     "upload_files": {"es": "Subir archivos", "en": "Upload Files"},
+    "upload_file": {"es": "Subir archivo", "en": "Upload file"},
+    "select_a_file": {"es": "Selecciona un archivo", "en": "Select a file"},
+    "uploaded_files": {"es": "Archivos subidos", "en": "Uploaded files"},
+    "no_uploaded_files": {"es": "No hay archivos subidos aún", "en": "No uploaded files yet"},
+    "file_uploaded": {"es": "Archivo subido correctamente", "en": "File uploaded successfully"},
+    "file_upload_failed": {"es": "No se pudo subir el archivo", "en": "The file could not be uploaded"},
+    "file_deleted": {"es": "Archivo eliminado correctamente", "en": "File deleted successfully"},
+    "file_delete_failed": {"es": "No se pudo eliminar el archivo", "en": "The file could not be deleted"},
     "users": {"es": "Usuarios", "en": "Users"},
     "ads": {"es": "Anuncios", "en": "Ads"},
     "scripts": {"es": "Scripts", "en": "Scripts"},
@@ -288,5 +299,6 @@
     "community": {"es": "Comunidad", "en": "Community"},
     "optional": {"es": "Opcional", "en": "optional"},
     "url": {"es": "URL", "en": "URL"},
+    "confirm_delete_file": {"es": "¿Está seguro de que desea eliminar este archivo?", "en": "Are you sure you want to delete this file?"},
     "external_disclaimer": {"es": "No me hago responsable por el contenido externo del enlace", "en": "I am not responsible for the external link content"}
 }
