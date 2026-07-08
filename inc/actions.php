@@ -263,60 +263,116 @@ class Actions {
     }
 
 public function uploadImage(): void {
-        if (isset($_POST["upload_image"]) || isset($_POST["upload_files"]) || !empty($_POST["upload_image"]) || !empty($_POST["upload_files"])) {
-            $files = $_FILES["files"] ?? [];
-            $uploaded_files = $files["name"] ?? [];
+    if (isset($_POST["upload_image"]) || !empty($_POST["upload_image"])) {
+        $files = $_FILES["files"] ?? [];
+        $uploaded_files = $files["name"] ?? [];
 
-            if (empty($uploaded_files) || !is_array($uploaded_files)) {
-                message("error", language("select_a_file"));
-                redirect(route("dashboard/upload-images"));
-            }
-
-            $upload_dir = RAIZ . "assets/img/";
-            if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
-                message("error", language("file_upload_failed"));
-                redirect(route("dashboard/upload-images"));
-            }
-
-            $uploaded_count = 0;
-            foreach ($uploaded_files as $index => $name) {
-                if (empty($name)) {
-                    continue;
-                }
-
-                $tmp_name = $files["tmp_name"][$index] ?? "";
-                $error = $files["error"][$index] ?? 4;
-
-                if (empty($tmp_name) || $error !== UPLOAD_ERR_OK || !is_uploaded_file($tmp_name)) {
-                    continue;
-                }
-
-                $sanitized_name = $this->sanitizeUploadFileName($name);
-                $target = $upload_dir . $sanitized_name;
-                $counter = 1;
-                $info = pathinfo($target);
-
-                while (file_exists($target)) {
-                    $target = $upload_dir . ($info["filename"] ?? "file") . "-" . $counter . "." . ($info["extension"] ?? "jpg");
-                    $counter++;
-                }
-
-                if (!move_uploaded_file($tmp_name, $target)) {
-                    continue;
-                }
-
-                $uploaded_count++;
-            }
-
-            if ($uploaded_count === 0) {
-                message("error", language("file_upload_failed"));
-            } else {
-                message("success", language("file_uploaded"));
-            }
-
+        if (empty($uploaded_files) || !is_array($uploaded_files)) {
+            message("error", language("select_a_file"));
             redirect(route("dashboard/upload-images"));
         }
+
+        $upload_dir = RAIZ . "assets/img/";
+        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
+            message("error", language("file_upload_failed"));
+            redirect(route("dashboard/upload-images"));
+        }
+
+        // Extensiones y MIME types permitidos
+        $allowed_extensions = ["jpg", "jpeg", "png", "gif", "webp"];
+        $allowed_mimes = [
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/webp",
+        ];
+
+        // Tamaño máximo permitido: 1MB
+        $max_file_size = 1 * 1024 * 1024; // 1048576 bytes
+
+        $uploaded_count = 0;
+        $rejected_by_size = false;
+
+        foreach ($uploaded_files as $index => $name) {
+            if (empty($name)) {
+                continue;
+            }
+
+            $tmp_name = $files["tmp_name"][$index] ?? "";
+            $error = $files["error"][$index] ?? 4;
+
+            if (empty($tmp_name) || $error !== UPLOAD_ERR_OK || !is_uploaded_file($tmp_name)) {
+                continue;
+            }
+
+            // 1. Validar tamaño reportado por PHP
+            $reported_size = $files["size"][$index] ?? 0;
+            if ($reported_size > $max_file_size) {
+                $rejected_by_size = true;
+                continue;
+            }
+
+            // 2. Validar tamaño real del archivo (defensa adicional)
+            $real_size = filesize($tmp_name);
+            if ($real_size === false || $real_size > $max_file_size) {
+                $rejected_by_size = true;
+                continue;
+            }
+
+            // 3. Validar extensión
+            $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            if (!in_array($extension, $allowed_extensions, true)) {
+                continue;
+            }
+
+            // 4. Validar que el contenido realmente sea una imagen
+            $image_info = @getimagesize($tmp_name);
+            if ($image_info === false || !isset($image_info["mime"])) {
+                continue;
+            }
+
+            // 5. Validar el MIME type real detectado
+            if (!in_array($image_info["mime"], $allowed_mimes, true)) {
+                continue;
+            }
+
+            // 6. (Opcional pero recomendado) Doble verificación con finfo
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $real_mime = finfo_file($finfo, $tmp_name);
+            finfo_close($finfo);
+            if (!in_array($real_mime, $allowed_mimes, true)) {
+                continue;
+            }
+
+            $sanitized_name = $this->sanitizeUploadFileName($name);
+            $target = $upload_dir . $sanitized_name;
+            $counter = 1;
+            $info = pathinfo($target);
+            while (file_exists($target)) {
+                $target = $upload_dir . ($info["filename"] ?? "file") . "-" . $counter . "." . ($info["extension"] ?? "jpg");
+                $counter++;
+            }
+
+            if (!move_uploaded_file($tmp_name, $target)) {
+                continue;
+            }
+
+            $uploaded_count++;
+        }
+
+        if ($uploaded_count === 0) {
+            if ($rejected_by_size) {
+                message("error", language("file_too_large"));
+            } else {
+                message("error", language("file_upload_failed"));
+            }
+        } else {
+            message("success", language("file_uploaded"));
+        }
+
+        redirect(route("dashboard/upload-images"));
     }
+}
 
     public function deleteUploadImage(): void {
         if (isset($_POST["delete_image"]) && isset($_POST["file"])){
