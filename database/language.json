@@ -1,4 +1,6 @@
 {
+    "view": {"es": "Ver", "en": "View"},
+    "file_too_large": {"es": "El archivo es demasiado grande", "en": "The file is too large"},
     "upload_images": {"es": "Subir imágenes", "en": "Upload images"},
     "upload": {"es": "Subir", "en": "Upload"},
     "allowed_image_types": {"es": "Solo se permiten imágenes (jpg, jpeg, png, gif, webp, svg)", "en": "Only images are allowed (jpg, jpeg, png, gif, webp, svg)"},
