@@ -262,6 +262,91 @@ class Actions {
         }
     }
 
+public function uploadImage(): void {
+        if (isset($_POST["upload_image"]) || isset($_POST["upload_files"]) || !empty($_POST["upload_image"]) || !empty($_POST["upload_files"])) {
+            $files = $_FILES["files"] ?? [];
+            $uploaded_files = $files["name"] ?? [];
+
+            if (empty($uploaded_files) || !is_array($uploaded_files)) {
+                message("error", language("select_a_file"));
+                redirect(route("dashboard/upload-images"));
+            }
+
+            $upload_dir = RAIZ . "assets/img/";
+            if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
+                message("error", language("file_upload_failed"));
+                redirect(route("dashboard/upload-images"));
+            }
+
+            $uploaded_count = 0;
+            foreach ($uploaded_files as $index => $name) {
+                if (empty($name)) {
+                    continue;
+                }
+
+                $tmp_name = $files["tmp_name"][$index] ?? "";
+                $error = $files["error"][$index] ?? 4;
+
+                if (empty($tmp_name) || $error !== UPLOAD_ERR_OK || !is_uploaded_file($tmp_name)) {
+                    continue;
+                }
+
+                $sanitized_name = $this->sanitizeUploadFileName($name);
+                $target = $upload_dir . $sanitized_name;
+                $counter = 1;
+                $info = pathinfo($target);
+
+                while (file_exists($target)) {
+                    $target = $upload_dir . ($info["filename"] ?? "file") . "-" . $counter . "." . ($info["extension"] ?? "jpg");
+                    $counter++;
+                }
+
+                if (!move_uploaded_file($tmp_name, $target)) {
+                    continue;
+                }
+
+                $uploaded_count++;
+            }
+
+            if ($uploaded_count === 0) {
+                message("error", language("file_upload_failed"));
+            } else {
+                message("success", language("file_uploaded"));
+            }
+
+            redirect(route("dashboard/upload-images"));
+        }
+    }
+
+    public function deleteUploadImage(): void {
+        if (isset($_POST["delete_image"]) && isset($_POST["file"])){
+            $file_name = basename($_POST["file"] ?? "");
+            $file_path = RAIZ . "assets/img/" . $file_name;
+
+            if (!empty($file_name) && file_exists($file_path) && is_file($file_path) && unlink($file_path)) {
+                message("success", language("file_deleted"));
+            } else {
+                message("error", language("file_delete_failed"));
+            }
+
+            redirect(route("dashboard/upload-images"));
+        }
+    }
+
+    private function sanitizeUploadFileName(string $name): string {
+        $name = basename($name);
+        $info = pathinfo($name);
+        $base = secureStringFile($info["filename"] ?? $name);
+        $extension = strtolower($info["extension"] ?? "");
+        $allowed_extensions = ["jpg", "jpeg", "png", "gif", "webp", "svg"];
+
+        if (!empty($extension) && !in_array($extension, $allowed_extensions, true)) {
+            $extension = "";
+        }
+
+        return $base . ($extension ? "." . $extension : "");
+    }
+
     public function login($captcha, $model): void {
         if (isset($_POST["login"]) || !empty($_POST["login"])){
             $user = secureString($_POST["user"] ?? "");
