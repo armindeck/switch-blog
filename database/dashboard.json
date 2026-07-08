@@ -7,9 +7,9 @@
             "co": "#4caf50",
             "bg": "rgba(76, 175, 80, 0.15) 0%, rgba(56, 142, 60, 0.15)"
         },
-        "upload-files": {
-            "id": "upload-files",
-            "name": "upload_files",
+        "upload-images": {
+            "id": "upload-images",
+            "name": "upload_images",
             "icon": "📤",
             "co": "#ff9800",
             "bg": "rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.15)"
