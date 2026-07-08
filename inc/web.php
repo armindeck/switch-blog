@@ -282,6 +282,40 @@ switch ($view) {
             $actions->updateSettingsHtaccess($data_config);
         }
 
+        if($get_section == "upload-images"){
+            $actions->uploadImage();
+            $actions->deleteUploadImage();
+
+            $upload_dir = RAIZ . "assets/img";
+            $uploaded_files = [];
+
+            if (is_dir($upload_dir)) {
+                $files = scandir($upload_dir);
+                foreach ($files as $file_name) {
+                    if ($file_name === "." || $file_name === "..") {
+                        continue;
+                    }
+
+                    $file_path = $upload_dir . "/" . $file_name;
+                    if (!is_file($file_path)) {
+                        continue;
+                    }
+
+                    $size = filesize($file_path);
+                    $size_text = $size >= 1048576 ? round($size / 1048576, 1) . " MB" : ($size >= 1024 ? round($size / 1024, 1) . " KB" : $size . " B");
+
+                    $uploaded_files[] = [
+                        "name" => $file_name,
+                        "size" => $size_text,
+                        "date" => date("Y-m-d H:i", filemtime($file_path)),
+                        "url" => route("assets/img/" . rawurlencode($file_name))
+                    ];
+                }
+            }
+
+            $data["uploaded_files"] = $uploaded_files;
+        }
+
         if($get_section == "scripts"){
             $data_config = read(pathFiles("config"));
             $actions->updateScripts($data_config);
